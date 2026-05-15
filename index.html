@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>할일 목록</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      padding: 50px;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 16px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #357abd;
+    }
+
+    li {
+      list-style: none;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      color: #444;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    ul {
+      padding: 0;
+    }
+
+    .done {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+
+    .todo-text {
+      flex: 1;
+    }
+
+    .delete-btn {
+      background-color: #e25555;
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+
+    /* 동그란 체크 버튼 */
+    .check-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #4a90e2;
+      background: white;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0;
+    }
+
+    .check-btn.checked {
+      background-color: #4a90e2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>📝 할일 목록</h1>
+
+    <div class="input-row">
+      <input id="input" type="text" placeholder="할일을 입력하세요"
+        onkeydown="if(event.key==='Enter') addTodo()">
+      <button onclick="addTodo()">추가</button>
+    </div>
+
+    <ul id="list"></ul>
+  </div>
+
+  <script>
+    function addTodo() {
+      const input = document.getElementById('input');
+      if (!input.value) return;
+
+      const li = document.createElement('li');
+
+      // 동그란 체크 버튼
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'check-btn';
+      checkBtn.onclick = function() {
+        checkBtn.classList.toggle('checked');
+        span.classList.toggle('done');
+      };
+
+      // 할일 텍스트
+      const span = document.createElement('span');
+      span.textContent = input.value;
+      span.className = 'todo-text';
+
+      // 삭제 버튼
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '삭제';
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.onclick = function() {
+        li.remove();
+      };
+
+      li.appendChild(checkBtn);
+      li.appendChild(span);
+      li.appendChild(deleteBtn);
+      document.getElementById('list').appendChild(li);
+
+      input.value = '';
+    }
+  </script>
+
+</body>
+</html>
