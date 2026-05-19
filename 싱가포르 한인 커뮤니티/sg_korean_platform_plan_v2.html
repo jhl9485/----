@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>싱가포르 한인 플랫폼 기획서 — Project SORI v2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --c-bg: #F7F5F0;
+    --c-surface: #FFFFFF;
+    --c-border: #E5E2DA;
+    --c-text: #1A1916;
+    --c-muted: #7A776F;
+    --c-accent: #C84B31;
+    --c-accent2: #2E5D9B;
+    --c-accent3: #2A7A4B;
+    --c-tag-bg: #F0EDE6;
+    --c-highlight: #FFF8E8;
+    --sidebar-w: 260px;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--c-bg);
+    color: var(--c-text);
+    line-height: 1.75;
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  nav#sidebar {
+    position: fixed; top: 0; left: 0;
+    width: var(--sidebar-w); height: 100vh;
+    background: var(--c-text); color: #fff;
+    padding: 2rem 1.5rem;
+    display: flex; flex-direction: column;
+    overflow-y: auto; z-index: 100;
+  }
+  .nav-brand { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: #fff; margin-bottom: 0.2rem; letter-spacing: -0.02em; }
+  .nav-brand span { color: var(--c-accent); }
+  .nav-version { font-size: 0.65rem; color: rgba(255,255,255,0.3); font-family: 'IBM Plex Mono', monospace; background: rgba(200,75,49,0.25); display: inline-block; padding: 1px 7px; border-radius: 4px; margin-bottom: 1.5rem; }
+  .nav-section-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); margin: 1.2rem 0 0.4rem; font-family: 'IBM Plex Mono', monospace; }
+  nav#sidebar a { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 6px; text-decoration: none; color: rgba(255,255,255,0.6); font-size: 0.8rem; transition: background 0.15s, color 0.15s; }
+  nav#sidebar a:hover, nav#sidebar a.active { background: rgba(255,255,255,0.1); color: #fff; }
+  nav#sidebar a .num { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.2); min-width: 18px; }
+  nav#sidebar a .new-badge { font-size: 0.55rem; background: var(--c-accent); color: #fff; padding: 1px 5px; border-radius: 3px; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; }
+  .nav-spacer { flex: 1; }
+  .nav-footer { font-size: 0.65rem; color: rgba(255,255,255,0.2); font-family: 'IBM Plex Mono', monospace; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; margin-top: 1rem; line-height: 1.7; }
+
+  /* MAIN */
+  main { margin-left: var(--sidebar-w); flex: 1; padding: 4rem 5rem 8rem; max-width: calc(880px + var(--sidebar-w)); }
+
+  /* SECTIONS */
+  .doc-section { margin-bottom: 4rem; }
+  .section-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--c-accent); margin-bottom: 0.5rem; }
+  .section-eyebrow.updated::after { content: ' — 업데이트됨'; color: #C89431; }
+  h1.doc-title { font-family: 'DM Serif Display', serif; font-size: 2.8rem; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1rem; }
+  h2.section-h { font-family: 'DM Serif Display', serif; font-size: 1.8rem; letter-spacing: -0.02em; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--c-border); }
+  h3.sub-h { font-size: 0.95rem; font-weight: 700; margin: 1.5rem 0 0.6rem; }
+  p { margin-bottom: 0.9rem; color: var(--c-text); font-size: 0.9rem; }
+  p.muted { color: var(--c-muted); }
+
+  /* UPDATE BANNER */
+  .update-banner { background: #FFFBF0; border: 1px solid #F0D060; border-radius: var(--radius); padding: 0.75rem 1.1rem; margin-bottom: 2rem; font-size: 0.82rem; display: flex; align-items: center; gap: 10px; }
+  .update-banner .icon { font-size: 1.1rem; }
+  .update-banner strong { color: #8B6000; }
+
+  /* COVER META */
+  .cover-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0 2rem; }
+  .cover-meta-item { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 0.7rem 1.1rem; }
+  .cover-meta-item .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--c-muted); margin-bottom: 2px; }
+  .cover-meta-item .val { font-size: 0.88rem; font-weight: 600; }
+
+  /* CALLOUT */
+  .callout { background: var(--c-surface); border-left: 3px solid var(--c-accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 0.9rem 1.1rem; margin: 1.25rem 0; font-size: 0.87rem; }
+  .callout.info { border-color: var(--c-accent2); }
+  .callout.success { border-color: var(--c-accent3); }
+  .callout.warn { border-color: #C89431; background: #FFFBF0; }
+  .callout.steal { border-color: #8B5CF6; background: #F5F3FF; }
+  .callout-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 0.3rem; }
+
+  /* CARDS GRID */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 0.9rem; margin: 1.1rem 0; }
+  .card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 1rem 1.15rem; }
+  .card .card-icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+  .card .card-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .card .card-desc { font-size: 0.8rem; color: var(--c-muted); line-height: 1.55; }
+  .card.accent-red { border-top: 3px solid var(--c-accent); }
+  .card.accent-blue { border-top: 3px solid var(--c-accent2); }
+  .card.accent-green { border-top: 3px solid var(--c-accent3); }
+  .card.accent-amber { border-top: 3px solid #C89431; }
+  .card.accent-purple { border-top: 3px solid #8B5CF6; }
+  .card.new-card { border: 1px solid #D4B8F0; background: #FAF5FF; }
+  .card.new-card .card-title::after { content: ' NEW'; font-size: 0.6rem; background: #8B5CF6; color: #fff; padding: 1px 5px; border-radius: 3px; vertical-align: middle; margin-left: 4px; font-family: 'IBM Plex Mono', monospace; }
+
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 0.7rem; margin: 1.1rem 0; }
+  .stat-box { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 0.9rem; text-align: center; }
+  .stat-box .stat-num { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--c-accent); }
+  .stat-box .stat-label { font-size: 0.72rem; color: var(--c-muted); margin-top: 2px; line-height: 1.4; }
+
+  /* STEP LIST */
+  .step-list { list-style: none; counter-reset: step-counter; margin: 1rem 0; }
+  .step-list li { counter-increment: step-counter; position: relative; padding: 0.9rem 1rem 0.9rem 3rem; margin-bottom: 0.6rem; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); font-size: 0.87rem; }
+  .step-list li::before { content: counter(step-counter, decimal-leading-zero); position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 500; color: var(--c-accent); background: #FDF0ED; width: 24px; height: 24px; border-radius: 5px; display: flex; align-items: center; justify-content: center; text-align: center; }
+  .step-list li strong { display: block; margin-bottom: 0.2rem; font-size: 0.9rem; }
+
+  /* TIMELINE */
+  .timeline { position: relative; margin: 1.5rem 0; }
+  .timeline::before { content: ''; position: absolute; left: 86px; top: 0; bottom: 0; width: 2px; background: var(--c-border); }
+  .tl-item { display: flex; gap: 1.25rem; margin-bottom: 1.1rem; align-items: flex-start; }
+  .tl-period { min-width: 76px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--c-muted); padding-top: 4px; line-height: 1.4; }
+  .tl-dot { width: 12px; height: 12px; background: var(--c-accent); border-radius: 50%; margin-top: 5px; flex-shrink: 0; position: relative; z-index: 1; }
+  .tl-dot.blue { background: var(--c-accent2); }
+  .tl-dot.green { background: var(--c-accent3); }
+  .tl-dot.amber { background: #C89431; }
+  .tl-dot.purple { background: #8B5CF6; }
+  .tl-body { flex: 1; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 0.8rem 1rem; }
+  .tl-body .tl-title { font-weight: 700; font-size: 0.87rem; margin-bottom: 0.25rem; }
+  .tl-body .tl-desc { font-size: 0.8rem; color: var(--c-muted); line-height: 1.55; }
+  .tl-body .tl-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.5rem; }
+  .tag { display: inline-block; font-size: 0.66rem; font-family: 'IBM Plex Mono', monospace; background: var(--c-tag-bg); color: var(--c-muted); padding: 2px 7px; border-radius: 20px; border: 1px solid var(--c-border); }
+  .tag.red { background: #FDF0ED; color: var(--c-accent); border-color: #F5C8BE; }
+  .tag.blue { background: #EBF0F9; color: var(--c-accent2); border-color: #BFCFE8; }
+  .tag.green { background: #EAF4EE; color: var(--c-accent3); border-color: #B8DAC6; }
+  .tag.purple { background: #F5F3FF; color: #8B5CF6; border-color: #DDD6FE; }
+  .tag.new { background: #F5F3FF; color: #8B5CF6; border-color: #DDD6FE; }
+  .tag.new::before { content: '★ '; }
+
+  /* REVENUE TABLE */
+  .rev-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin: 1rem 0; }
+  .rev-table th { background: var(--c-text); color: #fff; padding: 0.55rem 0.85rem; text-align: left; font-size: 0.76rem; font-weight: 500; }
+  .rev-table th:first-child { border-radius: 6px 0 0 0; }
+  .rev-table th:last-child { border-radius: 0 6px 0 0; }
+  .rev-table td { padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--c-border); vertical-align: top; }
+  .rev-table tr:last-child td { border-bottom: none; }
+  .rev-table tr:nth-child(even) td { background: #FAFAF8; }
+  .priority-high { color: var(--c-accent); font-weight: 600; }
+  .priority-mid { color: var(--c-accent2); font-weight: 600; }
+  .priority-low { color: var(--c-muted); }
+
+  /* PERSONA */
+  .persona-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.9rem; margin: 1.1rem 0; }
+  .persona { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 1.1rem; }
+  .persona-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 0.6rem; }
+  .persona-name { font-weight: 700; font-size: 0.92rem; margin-bottom: 0.1rem; }
+  .persona-type { font-size: 0.72rem; color: var(--c-muted); margin-bottom: 0.6rem; }
+  .persona-need { font-size: 0.78rem; line-height: 1.55; }
+  .persona-pain { font-size: 0.76rem; color: var(--c-accent); margin-top: 0.4rem; }
+
+  /* TECH GRID */
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 0.7rem; margin: 0.9rem 0; }
+  .tech-item { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 8px; padding: 0.8rem 0.9rem; }
+  .tech-item .tech-layer { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--c-muted); font-family: 'IBM Plex Mono', monospace; }
+  .tech-item .tech-name { font-size: 0.85rem; font-weight: 600; margin: 2px 0; }
+  .tech-item .tech-why { font-size: 0.73rem; color: var(--c-muted); line-height: 1.45; }
+
+  /* COMPETITOR BOX */
+  .competitor-box { background: #FFFBF0; border: 1px solid #F0D060; border-radius: var(--radius); padding: 1rem 1.2rem; margin: 1rem 0; }
+  .competitor-box .comp-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.5rem; color: #7A5500; }
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+  @media(max-width:600px){ .comp-grid { grid-template-columns: 1fr; } }
+  .comp-side { font-size: 0.8rem; line-height: 1.6; }
+  .comp-side .comp-label { font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .comp-side .comp-label.good { color: var(--c-accent3); }
+  .comp-side .comp-label.bad { color: var(--c-accent); }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+  @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+
+  /* HIGHLIGHT */
+  .highlight-box { background: var(--c-highlight); border: 1px solid #F0D060; border-radius: var(--radius); padding: 0.9rem 1.1rem; margin: 1.1rem 0; font-size: 0.87rem; }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--c-border); margin: 2.5rem 0; }
+
+  /* RESPONSIVE */
+  @media (max-width: 760px) {
+    :root { --sidebar-w: 0px; }
+    nav#sidebar { display: none; }
+    main { padding: 2rem 1.5rem 5rem; }
+    h1.doc-title { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="nav-brand">Project <span>SORI</span></div>
+  <div class="nav-version">v2.0 — 싱가폴꿀팁 분석 반영</div>
+
+  <div class="nav-section-label">개요</div>
+  <a href="#cover"><span class="num">00</span> 표지 & 요약</a>
+  <a href="#problem"><span class="num">01</span> 문제 정의</a>
+  <a href="#competitor"><span class="num">02</span> 경쟁사 분석 <span class="new-badge">updated</span></a>
+  <a href="#market"><span class="num">03</span> 시장 분석</a>
+  <a href="#persona"><span class="num">04</span> 사용자 페르소나</a>
+
+  <div class="nav-section-label">제품 전략</div>
+  <a href="#product"><span class="num">05</span> 핵심 기능 설계 <span class="new-badge">updated</span></a>
+  <a href="#mascot"><span class="num">06</span> 마스코트 전략 <span class="new-badge">NEW</span></a>
+  <a href="#content"><span class="num">07</span> 콘텐츠 전략 <span class="new-badge">NEW</span></a>
+  <a href="#ux"><span class="num">08</span> UX/UI 방향성</a>
+  <a href="#tech"><span class="num">09</span> 기술 스택</a>
+
+  <div class="nav-section-label">비즈니스</div>
+  <a href="#revenue"><span class="num">10</span> 수익 구조</a>
+  <a href="#growth"><span class="num">11</span> 성장 전략</a>
+
+  <div class="nav-section-label">실행</div>
+  <a href="#roadmap"><span class="num">12</span> 개발 로드맵 <span class="new-badge">updated</span></a>
+  <a href="#risk"><span class="num">13</span> 리스크 & 대응</a>
+  <a href="#kpi"><span class="num">14</span> KPI & 목표</a>
+
+  <div class="nav-spacer"></div>
+  <div class="nav-footer">
+    Singapore Korean Platform<br>
+    v2.0 — 2026.05 업데이트<br>
+    싱가폴꿀팁 분석 반영본
+  </div>
+</nav>
+
+<main>
+
+  <!-- 00 COVER -->
+  <section class="doc-section" id="cover">
+    <div class="update-banner"><span class="icon">🔄</span><span><strong>v2.0 업데이트</strong> — 경쟁사 singgultip.com 분석 결과를 반영해 기능 설계·콘텐츠 전략·로드맵을 전면 개정했습니다.</span></div>
+    <div class="section-eyebrow">Project SORI — 소리 (所里)</div>
+    <h1 class="doc-title">싱가포르 한인<br>차세대 플랫폼<br>기획서 v2</h1>
+    <p style="font-size:1rem; color: var(--c-muted); max-width:540px; line-height:1.8;">한국촌의 25년 SEO 자산, 싱가폴꿀팁의 커뮤니티 문화를 계승하되 — 노코드 플랫폼이 절대 따라올 수 없는 기술 기반 위에 싱가포르 한인 1등 플랫폼을 구축합니다.</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><div class="label">프로젝트명</div><div class="val">SORI (소리/所里)</div></div>
+      <div class="cover-meta-item"><div class="label">버전</div><div class="val">v2.0 (2026.05)</div></div>
+      <div class="cover-meta-item"><div class="label">목표 런칭</div><div class="val">웹 6개월 / 앱 9개월</div></div>
+      <div class="cover-meta-item"><div class="label">핵심 변경</div><div class="val">마스코트·데일리뉴스·고민방 추가</div></div>
+    </div>
+    <div class="callout">
+      <div class="callout-title">🎯 v2 핵심 전략 변경</div>
+      v1: "정보 허브 + 업소록 + 구인구직" → v2: <strong>여기에 마스코트 브랜딩 + 매일 오는 이유(데일리뉴스) + 감성 커뮤니티(고민방)를 추가.</strong> 싱가폴꿀팁이 콘텐츠 문화로 증명한 것들을, SORI는 훨씬 나은 기술 위에서 구현합니다.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 01 PROBLEM -->
+  <section class="doc-section" id="problem">
+    <div class="section-eyebrow">Section 01</div>
+    <h2 class="section-h">문제 정의</h2>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num">52%</div><div class="stat-label">한국촌 트래픽이 한국발<br>(싱가포르는 9%뿐)</div></div>
+      <div class="stat-box"><div class="stat-num">1,557</div><div class="stat-label">한국촌 인스타 팔로워<br>(SNS 존재감 無)</div></div>
+      <div class="stat-box"><div class="stat-num">2020</div><div class="stat-label">한국촌 앱 마지막 업데이트<br>(5년 이상 방치)</div></div>
+      <div class="stat-box"><div class="stat-num">3~4만</div><div class="stat-label">싱가포르 거주 한인 추정<br>(90% 이상 미개척)</div></div>
+    </div>
+    <div class="callout warn">
+      <div class="callout-title">⚠️ 기회의 창</div>
+      싱가포르 한인 3~4만 명 중 기존 플랫폼이 실제로 커버하는 싱가포르 거주 방문자는 월 2,600명 수준 — 모수의 10% 이하. 나머지 90%는 카카오톡과 인스타그램으로 분산 중이며, 이 수요를 하나로 묶는 플랫폼이 없다.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 02 COMPETITOR — UPDATED -->
+  <section class="doc-section" id="competitor">
+    <div class="section-eyebrow updated">Section 02 — 업데이트됨</div>
+    <h2 class="section-h">경쟁사 분석</h2>
+
+    <div class="competitor-box">
+      <div class="comp-title">🧚 singgultip.com (싱가폴꿀팁) — 가장 중요한 직접 경쟁자</div>
+      <p style="font-size:0.83rem; color:#7A5500; margin-bottom:0.5rem;">개인이 imweb(노코드 빌더)으로 운영. "No.1 Korean Community 2030" 표방. 기술적으로 열등하지만 커뮤니티 문화 설계에서 앞선 케이스.</p>
+      <div class="comp-grid">
+        <div class="comp-side">
+          <div class="comp-label good">✅ 배울 것 (훔쳐올 것)</div>
+          마스코트 "싱꿀이" → 브랜드 인격화<br>
+          Daily News → 매일 오는 이유<br>
+          "에휴 고민방" → 감성 커뮤니티<br>
+          "싱꿀 인증" → 챌린지형 UGC<br>
+          핫딜 섹션 → 실용적 유입 소스<br>
+          전 기능 무료 → 공급 극대화
+        </div>
+        <div class="comp-side">
+          <div class="comp-label bad">❌ 공략할 약점</div>
+          imweb 종속 → SEO 구조적 취약<br>
+          검색 기능 사실상 없음<br>
+          지도 기반 업소록 불가<br>
+          모바일 앱 없음<br>
+          광고 수익화 체계 없음<br>
+          40대+ 구매력 층 소외
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-h">전체 경쟁 구도</h3>
+    <table class="rev-table">
+      <thead><tr><th>플랫폼</th><th>강점</th><th>약점</th><th>SORI 대응</th></tr></thead>
+      <tbody>
+        <tr><td><strong>한국촌</strong></td><td>25년 SEO, 브랜드</td><td>노후 디자인, 앱 無, SNS 無</td><td class="priority-mid">SEO 승부 + 앱 우위</td></tr>
+        <tr><td><strong>싱가폴꿀팁</strong></td><td>커뮤니티 문화, 마스코트</td><td>imweb 한계, 검색 無, 앱 無</td><td class="priority-high">문화 흡수 + 기술 압도</td></tr>
+        <tr><td><strong>카카오오픈채팅</strong></td><td>실시간성, 사용자 집중</td><td>정보 검색 불가, 아카이빙 無</td><td class="priority-mid">카카오 정보를 검색 가능하게</td></tr>
+        <tr><td><strong>네이버 카페</strong></td><td>콘텐츠 검색</td><td>현지화 미흡, UX 낡음</td><td class="priority-low">모바일 UX로 차별화</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 03 MARKET -->
+  <section class="doc-section" id="market">
+    <div class="section-eyebrow">Section 03</div>
+    <h2 class="section-h">시장 분석</h2>
+    <div class="card-grid">
+      <div class="card"><div class="card-title">싱가포르 거주 한인</div><div class="card-desc">약 3~4만 명. EP, S-Pass, 학생, 동반가족. 연 소득 SGD 10만+ 비율 높음.</div></div>
+      <div class="card"><div class="card-title">한국→싱가포르 여행자</div><div class="card-desc">연 약 40~50만 명. 사전 정보 탐색 수요. 숙박·맛집·투어 구매 연결.</div></div>
+      <div class="card"><div class="card-title">싱가포르 한인 업소</div><div class="card-desc">한식당, 뷰티, 부동산, 교육, 의료 등 수백 개 업소. 광고·예약 수요.</div></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 04 PERSONA -->
+  <section class="doc-section" id="persona">
+    <div class="section-eyebrow">Section 04</div>
+    <h2 class="section-h">사용자 페르소나</h2>
+    <div class="persona-grid">
+      <div class="persona">
+        <div class="persona-avatar" style="background:#FDF0ED;">🧑‍💼</div>
+        <div class="persona-name">김직장인 (32세)</div>
+        <div class="persona-type">EP 취업자, 입국 1~3년차</div>
+        <div class="persona-need">집 구하기, 은행, 비자, 맛집, 병원. 매일 올 이유 필요.</div>
+        <div class="persona-pain">⚡ 카카오 채팅방 정보 검색 안 됨. 데일리뉴스로 매일 유입.</div>
+      </div>
+      <div class="persona">
+        <div class="persona-avatar" style="background:#EBF0F9;">👩‍👧</div>
+        <div class="persona-name">박엄마 (38세)</div>
+        <div class="persona-type">DP 비자, 자녀 교육 관심</div>
+        <div class="persona-need">학교 정보, 한국어 학원, 엄마 모임, 속마음 공유.</div>
+        <div class="persona-pain">⚡ 고민방·모임 게시판이 핵심 가치. 감성 커뮤니티 필요.</div>
+      </div>
+      <div class="persona">
+        <div class="persona-avatar" style="background:#EAF4EE;">🍜</div>
+        <div class="persona-name">이사장님 (45세)</div>
+        <div class="persona-type">한인 업소 운영자</div>
+        <div class="persona-need">신규 고객 유치, 이벤트 홍보, 예약 시스템.</div>
+        <div class="persona-pain">⚡ 지도 기반 업소록 + 리뷰로 경쟁력 확보.</div>
+      </div>
+      <div class="persona">
+        <div class="persona-avatar" style="background:#FFFBF0;">✈️</div>
+        <div class="persona-name">최여행객 (27세)</div>
+        <div class="persona-type">한국발 싱가포르 여행 예정</div>
+        <div class="persona-need">한국인 맛집 추천, 꿀팁, 핫딜.</div>
+        <div class="persona-pain">⚡ 핫딜 섹션 + SEO로 여행 전 검색 유입 확보.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 05 PRODUCT — UPDATED -->
+  <section class="doc-section" id="product">
+    <div class="section-eyebrow updated">Section 05 — 업데이트됨</div>
+    <h2 class="section-h">핵심 기능 설계 v2</h2>
+
+    <div class="callout steal">
+      <div class="callout-title">📌 v2 설계 원칙 — "훔치고 개선하고 압도하라"</div>
+      싱가폴꿀팁이 imweb으로 증명한 콘텐츠 공식(마스코트·뉴스·감성)을 흡수하고, imweb이 절대 구현할 수 없는 기술(지도·검색·앱·AI)로 넘어선다.
+    </div>
+
+    <h3 class="sub-h">🚀 Phase 1 — MVP (출시 기준, 6개월)</h3>
+    <div class="card-grid">
+      <div class="card accent-red">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">정보 허브 (검색 중심)</div>
+        <div class="card-desc">Algolia 기반 한국어 검색. 태그·카테고리 구조화. 카카오 채팅의 정보를 검색 가능하게.</div>
+      </div>
+      <div class="card accent-red">
+        <div class="card-icon">🏪</div>
+        <div class="card-title">업소록 2.0 (지도형)</div>
+        <div class="card-desc">Google Maps 기반. 지금 영업중 필터. 리뷰·평점. 한국어 메뉴판 사진. 싱가폴꿀팁이 절대 못 하는 것.</div>
+      </div>
+      <div class="card accent-red">
+        <div class="card-icon">💼</div>
+        <div class="card-title">구인구직 보드 (무료)</div>
+        <div class="card-desc">EP/S-Pass 비자별 필터. 한국어 가능 포지션 표시. 무료 게시 — MAU 우선.</div>
+      </div>
+      <div class="card new-card accent-purple">
+        <div class="card-icon">📰</div>
+        <div class="card-title">Daily SG 뉴스</div>
+        <div class="card-desc">싱가포르 현지 뉴스를 매일 한국어로. AI 번역 + 편집. 매일 방문할 이유. 싱가폴꿀팁이 증명한 재방문율 최강 무기.</div>
+      </div>
+      <div class="card new-card accent-purple">
+        <div class="card-icon">💭</div>
+        <div class="card-title">속마음 방 (고민 게시판)</div>
+        <div class="card-desc">익명 감성 고민 공유. 싱가포르 외로움·직장·이민 고민. 체류시간과 재방문율 동시 상승. 싱가폴꿀팁 에휴고민방 검증.</div>
+      </div>
+      <div class="card new-card accent-purple">
+        <div class="card-icon">🛍️</div>
+        <div class="card-title">플리마켓 (중고거래)</div>
+        <div class="card-desc">이주 초기 가구·가전, 귀국 전 처분 수요. 무료 게시판. 개발 비용 낮고 공급 자생적.</div>
+      </div>
+      <div class="card new-card accent-purple">
+        <div class="card-icon">🔥</div>
+        <div class="card-title">핫딜 게시판</div>
+        <div class="card-desc">FairPrice·항공사·쇼핑몰 할인 큐레이션. 실용 가치 높아 검색 유입 + 재방문 동시 효과.</div>
+      </div>
+    </div>
+
+    <h3 class="sub-h">🌱 Phase 2 — 커뮤니티 확장 (6~9개월)</h3>
+    <div class="card-grid">
+      <div class="card accent-blue">
+        <div class="card-icon">🏘️</div>
+        <div class="card-title">동네 커뮤니티</div>
+        <div class="card-desc">지역별 게시판. 벼룩시장, 카풀, 나눔.</div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">📅</div>
+        <div class="card-title">이벤트 캘린더</div>
+        <div class="card-desc">한인 행사·모임·공연. 참가 신청.</div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">🏠</div>
+        <div class="card-title">부동산 게시판 (무료)</div>
+        <div class="card-desc">한인 선호 콘도·HDB. 지도 기반 탐색.</div>
+      </div>
+      <div class="card new-card accent-purple">
+        <div class="card-icon">🏅</div>
+        <div class="card-title">SORI 인증 챌린지</div>
+        <div class="card-desc">MRT 전 노선 완주, 로컬 음식 도전 등 사진 인증. UGC 생성 + 인스타 바이럴.</div>
+      </div>
+    </div>
+
+    <h3 class="sub-h">💎 Phase 3 — 수익화 심화 (9~12개월)</h3>
+    <div class="card-grid">
+      <div class="card accent-green"><div class="card-icon">🎟️</div><div class="card-title">티켓 & 예약 커머스</div><div class="card-desc">한인 투어·공연 티켓. 수수료 5~10%.</div></div>
+      <div class="card accent-green"><div class="card-icon">📧</div><div class="card-title">위클리 뉴스레터</div><div class="card-desc">구독자 기반 스폰서십. Daily 뉴스 정제판.</div></div>
+      <div class="card accent-green"><div class="card-icon">⭐</div><div class="card-title">프리미엄 멤버십</div><div class="card-desc">SGD $8/월. 광고 제거, 전문가 Q&A.</div></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 06 MASCOT — NEW -->
+  <section class="doc-section" id="mascot">
+    <div class="section-eyebrow">Section 06 — 신규 추가</div>
+    <h2 class="section-h">마스코트 전략</h2>
+
+    <div class="callout steal">
+      <div class="callout-title">🧚 싱가폴꿀팁 "싱꿀이"가 증명한 것</div>
+      마스코트 하나가 플랫폼 전체의 인격을 만듭니다. 유저들이 "사이트"가 아닌 "친구"에게 가는 느낌을 주고, 재방문율과 브랜드 기억도를 극적으로 높입니다. SORI도 반드시 필요합니다.
+    </div>
+
+    <h3 class="sub-h">SORI 마스코트 컨셉 후보</h3>
+    <div class="card-grid">
+      <div class="card accent-red">
+        <div class="card-icon">🐦</div>
+        <div class="card-title">작은 새 "소리"</div>
+        <div class="card-desc">싱가포르 하늘을 자유롭게 나는 작은 새. 싱가포르의 다양한 동네를 탐험하는 여행자 이미지. 국적 초월, 친근감 높음.</div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">🧑‍🚀</div>
+        <div class="card-title">한인 청년 "소리"</div>
+        <div class="card-desc">MRT를 타고 싱가포르를 돌아다니는 한인 20대 캐릭터. 사용자와 동일시. 2030 타겟에 최적.</div>
+      </div>
+      <div class="card accent-green">
+        <div class="card-icon">🦁</div>
+        <div class="card-title">한-싱 혼합 캐릭터</div>
+        <div class="card-desc">싱가포르 국장(사자)에서 영감을 받은 캐릭터에 한복 요소 가미. 두 문화 융합 상징. 독창성 높음.</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      💡 <strong>실행 팁:</strong> AI 이미지 생성(Midjourney, DALL-E) 으로 3가지 시안 제작 → 커뮤니티 투표로 최종 결정. 유저가 직접 선택한 마스코트는 애착이 2배. 비용: 거의 0원.
+    </div>
+
+    <h3 class="sub-h">마스코트 활용 지점</h3>
+    <ol class="step-list">
+      <li><strong>빈 피드 화면</strong> "아직 글이 없어요! 첫 글을 써봐요 🐦"</li>
+      <li><strong>로딩 화면</strong> 마스코트가 MRT 타는 애니메이션</li>
+      <li><strong>에러 페이지</strong> "길을 잃었어요! 홈으로 돌아가볼까요?"</li>
+      <li><strong>Daily 뉴스 아바타</strong> 뉴스 큐레이터 역할로 "소리가 오늘의 뉴스를 전합니다"</li>
+      <li><strong>인스타그램 계정</strong> 마스코트 중심의 SNS 콘텐츠 — 팔로워 확보 채널</li>
+    </ol>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 07 CONTENT STRATEGY — NEW -->
+  <section class="doc-section" id="content">
+    <div class="section-eyebrow">Section 07 — 신규 추가</div>
+    <h2 class="section-h">콘텐츠 전략</h2>
+    <p class="muted">싱가폴꿀팁 분석에서 발견한 핵심: 기술보다 콘텐츠 리듬이 MAU를 만든다. 사람들이 매일, 매주 돌아올 이유를 설계합니다.</p>
+
+    <h3 class="sub-h">📅 콘텐츠 리듬 설계</h3>
+    <table class="rev-table">
+      <thead><tr><th>주기</th><th>콘텐츠</th><th>담당</th><th>목적</th></tr></thead>
+      <tbody>
+        <tr><td><strong>매일</strong></td><td>Daily SG 뉴스 (5개)</td><td>AI 번역 + 운영자 편집</td><td>직접 방문 습관 형성</td></tr>
+        <tr><td><strong>매일</strong></td><td>속마음 방 자유 게시</td><td>유저 UGC</td><td>감성 연결, 체류시간↑</td></tr>
+        <tr><td><strong>주 2~3회</strong></td><td>맛집 리뷰 (운영자 큐레이션)</td><td>운영자</td><td>콘텐츠 품질 보장</td></tr>
+        <tr><td><strong>주 1회</strong></td><td>위클리 뉴스레터</td><td>AI 보조 + 운영자</td><td>이탈 사용자 재유입</td></tr>
+        <tr><td><strong>수시</strong></td><td>핫딜 정보</td><td>운영자 + 유저</td><td>검색 유입 + 재방문</td></tr>
+        <tr><td><strong>월 1~2회</strong></td><td>SORI 인증 챌린지 이벤트</td><td>운영자 기획</td><td>바이럴 + UGC 폭발</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      <div class="callout-title">🤖 AI 자동화로 1인도 가능한 이유</div>
+      Daily 뉴스: CNA/Straits Times RSS → GPT API 번역 → 자동 게시. 운영자 검토는 5분. 위클리 뉴스레터: 주간 인기글 자동 집계 → AI 초안 → 운영자 편집. 총 소요시간 1시간 이하. 싱가폴꿀팁이 수동으로 하는 걸 SORI는 반자동화.
+    </div>
+
+    <h3 class="sub-h">📣 오픈 전 씨드 콘텐츠 계획</h3>
+    <ol class="step-list">
+      <li><strong>생활 가이드 50개 직접 작성</strong> "싱가포르 은행 계좌 개설 A-Z", "EP 비자 갱신 완전 정복" 등 검색 수요 높은 롱테일. SEO 기반 확보.</li>
+      <li><strong>맛집 리뷰 30개</strong> 한인 선호 맛집 직접 방문 또는 기존 리뷰 재구성. 업소록 초기 채움.</li>
+      <li><strong>핫딜 10개 사전 적재</strong> FairPrice, 주요 항공사 프로모션 정보.</li>
+      <li><strong>업소 50개 무료 사전 등록</strong> 한인 업소 직접 연락해 무료 등재 완료 후 런칭.</li>
+    </ol>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 08 UX -->
+  <section class="doc-section" id="ux">
+    <div class="section-eyebrow">Section 08</div>
+    <h2 class="section-h">UX/UI 방향성</h2>
+
+    <h3 class="sub-h">🎨 디자인 원칙</h3>
+    <ol class="step-list">
+      <li><strong>모바일 퍼스트, 앱처럼 느껴지는 웹</strong> 전체 시나리오를 스마트폰 기준으로. Bottom navigation. 싱가폴꿀팁보다 확연히 나은 모바일 UX.</li>
+      <li><strong>캐주얼함 + 신뢰의 공존</strong> 감성 게시판(속마음방)은 친근하게, 비자·세금 정보는 신뢰감 있게. 섹션별 톤 분리.</li>
+      <li><strong>신뢰 설계 (Trust Design)</strong> 모든 정보 카드에 마지막 업데이트 일시 표시. 오래된 정보는 자동 "업데이트 필요" 배지.</li>
+      <li><strong>정보 밀도 최적화</strong> 카드·타일·리스트를 상황에 맞게 전환. 스크롤 1회로 원하는 정보 도달.</li>
+    </ol>
+
+    <div class="highlight-box">
+      💡 <strong>킬러 UX:</strong> 홈 첫 화면의 "지금 열려있는 한식당 47곳 →" 버튼. 현재 시간 기준 영업 중인 한인 업소 즉시 필터. imweb으로는 절대 구현 불가.
+    </div>
+
+    <h3 class="sub-h">핵심 화면 구성</h3>
+    <table class="rev-table">
+      <thead><tr><th>화면</th><th>핵심 요소</th><th>싱가폴꿀팁 대비 차별화</th></tr></thead>
+      <tbody>
+        <tr><td><strong>홈</strong></td><td>Daily 뉴스 + 빠른 접근 + 환율/날씨</td><td>AI 뉴스 자동화, 실시간 위젯</td></tr>
+        <tr><td><strong>탐색</strong></td><td>카테고리 + 지도 토글 + 검색</td><td>지도-리스트 즉시 전환 (imweb 불가)</td></tr>
+        <tr><td><strong>커뮤니티</strong></td><td>속마음방 + Q&A + 핫딜 + 인기글</td><td>태그 기반 구독, 검색 가능</td></tr>
+        <tr><td><strong>업소록</strong></td><td>지도 + 영업중 필터 + 리뷰</td><td>현재 영업중 즉시 필터 (imweb 불가)</td></tr>
+        <tr><td><strong>MY</strong></td><td>내 글·즐겨찾기·알림</td><td>비자 만료 알림, 관심 업소 알림 (앱)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 09 TECH -->
+  <section class="doc-section" id="tech">
+    <div class="section-eyebrow">Section 09</div>
+    <h2 class="section-h">기술 스택</h2>
+    <div class="callout">
+      <div class="callout-title">🔑 핵심 원칙</div>
+      imweb과 달리 코드를 직접 소유하기 때문에 원하는 기능을 언제든 추가 가능. 1인 개발자 기준 유지보수 최소화·생산성 최대화. 초기 인프라 비용 월 $0으로 시작.
+    </div>
+
+    <h3 class="sub-h">웹 프론트엔드</h3>
+    <div class="tech-grid">
+      <div class="tech-item"><div class="tech-layer">Framework</div><div class="tech-name">Next.js 14</div><div class="tech-why">SSR로 SEO 압도. imweb의 구조적 SEO 한계를 여기서 역전.</div></div>
+      <div class="tech-item"><div class="tech-layer">Styling</div><div class="tech-name">Tailwind CSS</div><div class="tech-why">빠른 UI 개발. 커스텀 디자인 토큰.</div></div>
+      <div class="tech-item"><div class="tech-layer">Language</div><div class="tech-name">TypeScript</div><div class="tech-why">타입 안정성 = 버그 감소. 1인 유지보수 필수.</div></div>
+    </div>
+
+    <h3 class="sub-h">앱</h3>
+    <div class="tech-grid">
+      <div class="tech-item"><div class="tech-layer">Framework</div><div class="tech-name">React Native (Expo)</div><div class="tech-why">iOS+Android 단일 코드. 웹과 로직 공유.</div></div>
+      <div class="tech-item"><div class="tech-layer">Push 알림</div><div class="tech-name">Expo Notifications</div><div class="tech-why">FCM/APNs 통합. 개인화 알림. 싱가폴꿀팁이 못 하는 핵심.</div></div>
+    </div>
+
+    <h3 class="sub-h">백엔드 & 인프라</h3>
+    <div class="tech-grid">
+      <div class="tech-item"><div class="tech-layer">BaaS</div><div class="tech-name">Supabase</div><div class="tech-why">DB + Auth + Storage + Realtime. 데이터 완전 소유 (imweb과 결정적 차이).</div></div>
+      <div class="tech-item"><div class="tech-layer">검색</div><div class="tech-name">Algolia</div><div class="tech-why">한국어 검색. 월 10K 무료. imweb은 이 수준 검색 불가.</div></div>
+      <div class="tech-item"><div class="tech-layer">지도</div><div class="tech-name">Google Maps API</div><div class="tech-why">업소록 핵심. 현재 영업중 필터. imweb 절대 불가.</div></div>
+      <div class="tech-item"><div class="tech-layer">배포</div><div class="tech-name">Vercel</div><div class="tech-why">전 세계 엣지 서버. 싱가포르 빠른 로딩. SEO 점수↑.</div></div>
+      <div class="tech-item"><div class="tech-layer">AI 번역</div><div class="tech-name">OpenAI API</div><div class="tech-why">Daily 뉴스 자동 번역. 1인 콘텐츠 운영 핵심. imweb 불가.</div></div>
+      <div class="tech-item"><div class="tech-layer">이메일</div><div class="tech-name">Resend</div><div class="tech-why">뉴스레터 발송. 월 3,000건 무료.</div></div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-title">💰 초기 인프라 비용</div>
+      Supabase 무료 + Vercel 무료 + Algolia 무료 + OpenAI API ~$10/월(뉴스 번역). <strong>월 $10 수준으로 시작 가능.</strong>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 10 REVENUE -->
+  <section class="doc-section" id="revenue">
+    <div class="section-eyebrow">Section 10</div>
+    <h2 class="section-h">수익 구조 — MAU 우선 원칙</h2>
+
+    <div class="callout warn">
+      <div class="callout-title">⚠️ 핵심 원칙 (이전 논의 반영)</div>
+      MAU가 목표인 단계에서 올리는 사람(공급자)에게 돈을 받으면 공급이 줄어 MAU도 줄어든다. <strong>구인공고·부동산·플리마켓은 완전 무료. 수익은 더 잘 보이는 것(프리미엄 노출)에서만.</strong>
+    </div>
+
+    <h3 class="sub-h">Layer 1 — 노출 프리미엄 (즉시 시작, 공급 훼손 없음)</h3>
+    <table class="rev-table">
+      <thead><tr><th>상품</th><th>가격</th><th>목표</th><th>연 수익 추정</th></tr></thead>
+      <tbody>
+        <tr><td>업소 기본 등재</td><td class="priority-low">무료 (공급 확보용)</td><td>300개</td><td class="priority-low">—</td></tr>
+        <tr><td>업소 프리미엄 노출 (상단 고정)</td><td class="priority-high">$80~150/월</td><td>50개</td><td class="priority-high">~$72K</td></tr>
+        <tr><td>구인공고 기본</td><td class="priority-low">무료</td><td>공급 극대화</td><td class="priority-low">—</td></tr>
+        <tr><td>구인공고 프리미엄 (급구 배지+상단)</td><td class="priority-mid">$20~30/건</td><td>월 50건</td><td class="priority-mid">~$15K</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-h">Layer 2 — 광고 (6개월 후)</h3>
+    <table class="rev-table">
+      <thead><tr><th>상품</th><th>가격</th><th>주요 광고주</th></tr></thead>
+      <tbody>
+        <tr><td>홈 메인 배너</td><td class="priority-high">$300~500/월</td><td>이민법인, 부동산, 은행</td></tr>
+        <tr><td>카테고리 상단 광고</td><td class="priority-mid">$150~250/월</td><td>카테고리별 1개 독점</td></tr>
+        <tr><td>뉴스레터 스폰서</td><td class="priority-mid">$200~400/회</td><td>구독자 5,000명 시 단가 상승</td></tr>
+        <tr><td>Daily 뉴스 스폰서</td><td class="priority-mid">$100~200/주</td><td>업소·서비스 업체</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-h">Layer 3 — 커머스 (9~12개월)</h3>
+    <div class="two-col">
+      <div class="card accent-green"><div class="card-title">이벤트·투어 티켓</div><div class="card-desc">거래액의 8~12% 수수료. 월 SGD 5,000 거래 목표.</div></div>
+      <div class="card accent-green"><div class="card-title">핫딜 제휴 수수료</div><div class="card-desc">쿠폰 클릭·구매 시 수수료. 업소와 제휴.</div></div>
+    </div>
+
+    <h3 class="sub-h">Layer 4 — 구독 (12개월 이후)</h3>
+    <div class="two-col">
+      <div class="card accent-green"><div class="card-title">개인 프리미엄 SGD $8/월</div><div class="card-desc">광고 제거, 전문가 Q&A, 독점 쿠폰. 목표: 500명 → 월 $4,000</div></div>
+      <div class="card accent-green"><div class="card-title">업소 프로 플랜 $150/월</div><div class="card-desc">예약 시스템, 리뷰 대시보드. 목표: 30개 → 월 $4,500</div></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 11 GROWTH -->
+  <section class="doc-section" id="growth">
+    <div class="section-eyebrow">Section 11</div>
+    <h2 class="section-h">성장 전략</h2>
+
+    <h3 class="sub-h">🌱 콜드 스타트 해결</h3>
+    <ol class="step-list">
+      <li><strong>씨드 콘텐츠 선제 구축</strong> 오픈 전 가이드 50개 직접 작성. SEO 오픈 즉시 유기 트래픽 확보.</li>
+      <li><strong>업소 50개 사전 무료 등재</strong> 업소가 자신의 채널에 소개 → 자연 바이럴.</li>
+      <li><strong>인플루언서 오픈 파트너</strong> 싱가포르 관련 유튜버·블로거 3~5명 파트너십.</li>
+      <li><strong>카카오 채팅방 연계</strong> 주요 채팅방에 유용한 Daily 뉴스 링크 공유. 대체가 아닌 보완.</li>
+    </ol>
+
+    <h3 class="sub-h">📱 SNS 전략</h3>
+    <div class="card-grid">
+      <div class="card accent-red"><div class="card-title">인스타그램 (마스코트 중심)</div><div class="card-desc">마스코트 "소리"의 싱가포르 일상 릴스. 주 3회. 목표: 6개월 1만 팔로워. 현재 한국촌(1,557)·싱가폴꿀팁 대비 압도 목표.</div></div>
+      <div class="card accent-blue"><div class="card-title">네이버 블로그 (SEO)</div><div class="card-desc">한국발 트래픽(52%) 공략. 싱가포르 여행·이주 키워드. 플랫폼 가입 깔때기.</div></div>
+      <div class="card accent-green"><div class="card-title">위클리 뉴스레터</div><div class="card-desc">Daily 뉴스 주간 정제판. 이탈 사용자 재유입 채널.</div></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 12 ROADMAP — UPDATED -->
+  <section class="doc-section" id="roadmap">
+    <div class="section-eyebrow updated">Section 12 — 업데이트됨</div>
+    <h2 class="section-h">개발 로드맵 v2</h2>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-period">0~1개월</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">🎯 기획 & 설계 + 마스코트</div>
+          <div class="tl-desc">도메인 확보, 와이어프레임, DB 스키마, Supabase 셋업. <strong>마스코트 AI 시안 3개 제작 → 커뮤니티 투표 → 확정.</strong> 브랜드 아이덴티티 완성.</div>
+          <div class="tl-tags"><span class="tag red">기획</span><span class="tag new">마스코트 NEW</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-period">2~3개월</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">🏗️ 핵심 인프라 + AI 뉴스 파이프라인</div>
+          <div class="tl-desc">Next.js 셋업, Supabase 연동, 카카오·구글 소셜 로그인. <strong>Daily 뉴스 AI 번역 자동화 파이프라인 구축 (RSS → GPT → DB → 게시).</strong> 씨드 콘텐츠 50개 작성.</div>
+          <div class="tl-tags"><span class="tag red">개발</span><span class="tag new">AI 뉴스 NEW</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-period">3~5개월</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">⚙️ MVP 핵심 기능 개발</div>
+          <div class="tl-desc">업소록(지도+리뷰), 커뮤니티 게시판, <strong>속마음 방(익명 고민), 플리마켓, 핫딜 게시판</strong>, 구인구직, Algolia 검색, 기본 광고 배너.</div>
+          <div class="tl-tags"><span class="tag red">개발</span><span class="tag new">속마음방 NEW</span><span class="tag new">플리마켓 NEW</span><span class="tag new">핫딜 NEW</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-period">6개월</div>
+        <div class="tl-dot blue"></div>
+        <div class="tl-body">
+          <div class="tl-title">🚀 웹 베타 런칭</div>
+          <div class="tl-desc">업소 50개 사전 등재 완료 후 공개. 인플루언서 파트너 동시 콘텐츠. SNS 채널 오픈. Daily 뉴스 매일 발행 시작. 마스코트 인스타 계정 런칭.</div>
+          <div class="tl-tags"><span class="tag blue">런칭</span><span class="tag">마케팅</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-period">7~9개월</div>
+        <div class="tl-dot purple"></div>
+        <div class="tl-body">
+          <div class="tl-title">📱 모바일 앱 개발</div>
+          <div class="tl-desc">React Native (Expo) 앱. <strong>개인화 푸시 알림 — 관심 태그 새 글, 관심 업소 이벤트, 핫딜 알림.</strong> App Store / Play Store 제출. 싱가폴꿀팁이 절대 못 따라오는 기능.</div>
+          <div class="tl-tags"><span class="tag purple">앱</span><span class="tag new">푸시알림 NEW</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-period">10~12개월</div>
+        <div class="tl-dot green"></div>
+        <div class="tl-body">
+          <div class="tl-title">💰 수익화 & 스케일링</div>
+          <div class="tl-desc">유료 구독 도입, 이벤트 커머스, 뉴스레터 스폰서십. SORI 인증 챌린지 이벤트 론칭. Phase 2 기능 추가.</div>
+          <div class="tl-tags"><span class="tag green">수익화</span><span class="tag">성장</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 13 RISK -->
+  <section class="doc-section" id="risk">
+    <div class="section-eyebrow">Section 13</div>
+    <h2 class="section-h">리스크 & 대응</h2>
+    <table class="rev-table">
+      <thead><tr><th>리스크</th><th>가능성</th><th>대응</th></tr></thead>
+      <tbody>
+        <tr><td><strong>콜드 스타트 실패</strong></td><td class="priority-high">높음</td><td>씨드 콘텐츠 50개 + 업소 50개 사전 확보. Daily 뉴스 오픈 즉시 발행.</td></tr>
+        <tr><td><strong>1인 번아웃</strong></td><td class="priority-mid">중간</td><td>MVP 스코프 엄격 제한. AI 자동화로 콘텐츠 부담 최소화.</td></tr>
+        <tr><td><strong>Daily 뉴스 품질 저하</strong></td><td class="priority-mid">중간</td><td>AI 번역 후 운영자 5분 검토 필수. 품질 기준 체크리스트 운영.</td></tr>
+        <tr><td><strong>싱가폴꿀팁 모방 대응</strong></td><td class="priority-low">낮음</td><td>imweb 구조상 지도·검색·앱은 모방 불가. 기술 우위 유지.</td></tr>
+        <tr><td><strong>수익화 지연</strong></td><td class="priority-mid">중간</td><td>Layer 1(프리미엄 노출)부터 즉시. 광고 의존도 최소화.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 14 KPI -->
+  <section class="doc-section" id="kpi">
+    <div class="section-eyebrow">Section 14</div>
+    <h2 class="section-h">KPI & 목표</h2>
+    <table class="rev-table">
+      <thead><tr><th>지표</th><th>현재 경쟁사</th><th>Q2 (런칭)</th><th>Q3</th><th>Q4 (1년)</th></tr></thead>
+      <tbody>
+        <tr><td>월 방문자 (MAU)</td><td>한국촌 28K / 싱꿀팁 추정 20K+</td><td class="priority-low">15,000</td><td class="priority-mid">40,000</td><td class="priority-high">100,000</td></tr>
+        <tr><td>싱가포르발 트래픽</td><td>한국촌 9.2%</td><td class="priority-low">25%</td><td class="priority-mid">40%</td><td class="priority-high">50%+</td></tr>
+        <tr><td>Daily 뉴스 재방문율</td><td>—</td><td class="priority-low">측정 시작</td><td class="priority-mid">30%+ 직접방문</td><td class="priority-high">40%+ 직접방문</td></tr>
+        <tr><td>인스타 팔로워</td><td>한국촌 1,557</td><td class="priority-low">3,000</td><td class="priority-mid">10,000</td><td class="priority-high">25,000</td></tr>
+        <tr><td>등록 업소</td><td>미공개</td><td class="priority-low">50개</td><td class="priority-mid">150개</td><td class="priority-high">350개</td></tr>
+        <tr><td>월 수익 (SGD)</td><td>추정 $5~10K</td><td class="priority-low">$1K</td><td class="priority-mid">$8K</td><td class="priority-high">$20K+</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout success">
+      <div class="callout-title">✅ 1년차 성공 기준</div>
+      한국촌·싱가폴꿀팁 합산 MAU 추월 + Daily 뉴스 직접방문율 40%+ + 싱가포르 거주 한인 트래픽 비율 50%+ + 월 수익 SGD $15K+
+    </div>
+
+    <div style="margin-top: 2.5rem; padding: 1.5rem; background: var(--c-text); border-radius: var(--radius); color: #fff; text-align: center;">
+      <div style="font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 0.5rem;">기획서 v2 — 검토 완료</div>
+      <p style="color: rgba(255,255,255,0.55); font-size: 0.85rem; margin-bottom: 1.1rem;">수정할 내용이 있으면 알려주세요. 확정되면 와이어프레임 설계로 넘어갑니다.</p>
+      <div style="display:flex; gap:0.7rem; justify-content:center; flex-wrap:wrap;">
+        <span style="background:var(--c-accent); color:#fff; padding:0.45rem 1.1rem; border-radius:6px; font-size:0.82rem; font-weight:600;">v2 기획서 확인</span>
+        <span style="border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.55); padding:0.45rem 1.1rem; border-radius:6px; font-size:0.82rem;">다음: 와이어프레임 →</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const sections = document.querySelectorAll('.doc-section');
+  const navLinks = document.querySelectorAll('nav#sidebar a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`nav#sidebar a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.25 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
