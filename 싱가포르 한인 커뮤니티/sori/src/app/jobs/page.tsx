@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { JOBS, type VisaType, type JobType } from "@/data/jobs";
 import SponsoredJobCard from "@/components/ads/SponsoredJobCard";
+import { useUserJobs } from "@/lib/userContent";
 
 const VISA_FILTERS: { label: string; value: VisaType | "전체" }[] = [
   { label: "전체", value: "전체" },
@@ -27,7 +28,11 @@ export default function JobsPage() {
   const [koreanOnly, setKoreanOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filtered = JOBS.filter((job) => {
+  const userJobs = useUserJobs();
+  const allJobs = useMemo(() => [...userJobs, ...JOBS], [userJobs]);
+  const userIds = useMemo(() => new Set(userJobs.map((u) => u.id)), [userJobs]);
+
+  const filtered = allJobs.filter((job) => {
     if (visaFilter !== "전체" && job.visaType !== visaFilter) return false;
     if (typeFilter !== "전체" && job.jobType !== typeFilter) return false;
     if (koreanOnly && !job.koreanRequired) return false;
@@ -45,7 +50,7 @@ export default function JobsPage() {
 
       {/* 검색 */}
       <div className="pb-3 relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[0.9rem] text-[#888070] pointer-events-none">🔍</span>
+        <span className="absolute left-3 inset-y-0 flex items-center text-[0.9rem] text-[#888070] pointer-events-none leading-none">🔍</span>
         <input type="text" placeholder="직종, 회사, 기술스택 검색..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white border border-black/[0.08] rounded-full py-[10px] pl-10 pr-4 text-[0.85rem] outline-none placeholder:text-[#888070] font-[inherit] focus:border-black/[0.15] transition-colors" />
       </div>
@@ -71,12 +76,20 @@ export default function JobsPage() {
         </button>
       </div>
 
-      {/* 결과 수 */}
-      <div className="flex items-center justify-between pb-3">
+      {/* 결과 수 + 등록 */}
+      <div className="flex items-center justify-between pb-3 gap-2">
         <span className="text-[0.75rem] text-[#888070]">
           <span className="font-bold text-[#181614]">{filtered.length}개</span> 공고
         </span>
-        <button className="text-[0.75rem] text-[#888070]">최신순 ▾</button>
+        <div className="flex items-center gap-2">
+          <button className="text-[0.75rem] text-[#888070]">최신순 ▾</button>
+          <Link
+            href="/jobs/write"
+            className="bg-[#2B7A50] text-white text-[0.75rem] font-bold px-3 py-[6px] rounded-[10px] hover:bg-[#246642] transition-colors flex items-center gap-1"
+          >
+            📋 공고 등록
+          </Link>
+        </div>
       </div>
 
       {/* 공고 목록 — 데스크탑 2열 그리드 */}
@@ -97,8 +110,9 @@ export default function JobsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1 flex-wrap">
-                    {job.isNew && <span className="text-[0.6rem] bg-[#D04020] text-white px-[5px] py-[1px] rounded font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>NEW</span>}
-                    {job.isUrgent && <span className="text-[0.6rem] bg-[#B07010] text-white px-[5px] py-[1px] rounded font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>급구</span>}
+                    {userIds.has(job.id) && <span className="text-[0.6rem] bg-[#2B7A50] text-white px-[5px] py-[1px] rounded font-bold">내 공고</span>}
+                    {!userIds.has(job.id) && job.isNew && <span className="text-[0.6rem] bg-[#D04020] text-white px-[5px] py-[1px] rounded font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>NEW</span>}
+                    {!userIds.has(job.id) && job.isUrgent && <span className="text-[0.6rem] bg-[#B07010] text-white px-[5px] py-[1px] rounded font-bold" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>급구</span>}
                   </div>
                   <div className="text-[0.88rem] font-bold mt-[2px] leading-tight">{job.title}</div>
                   <div className="text-[0.75rem] text-[#888070]">{job.company}</div>
@@ -125,9 +139,13 @@ export default function JobsPage() {
         </div>
       )}
 
-      <button className="fixed bottom-[76px] md:bottom-8 right-4 md:right-8 xl:right-[312px] w-12 h-12 bg-[#2B7A50] text-white rounded-full shadow-[0_4px_16px_rgba(43,122,80,0.35)] flex items-center justify-center text-xl z-40 hover:bg-[#246642] hover:scale-105 transition-all">
+      <Link
+        href="/jobs/write"
+        className="fixed bottom-[76px] md:bottom-8 right-4 md:right-8 xl:right-[312px] w-12 h-12 bg-[#2B7A50] text-white rounded-full shadow-[0_4px_16px_rgba(43,122,80,0.35)] flex items-center justify-center text-xl leading-none z-40 hover:bg-[#246642] hover:scale-105 transition-all"
+        aria-label="공고 등록"
+      >
         📋
-      </button>
+      </Link>
     </div>
   );
 }

@@ -5,9 +5,10 @@ import DesktopSidebar from "./DesktopSidebar";
 import DesktopRightPanel from "./DesktopRightPanel";
 import TopNav from "./TopNav";
 import BottomNav from "./BottomNav";
+import ScrollToTop from "@/components/shared/ScrollToTop";
 
 // 사이드바 없이 단독 렌더링할 페이지
-const STANDALONE = ["/demo", "/write"];
+const STANDALONE = ["/demo", "/write", "/realty/write", "/flea/write", "/jobs/write", "/business/write"];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -45,6 +46,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="md:hidden">
         <BottomNav />
       </div>
+
+      {/* ── 모바일 스크롤 탑 ── */}
+      <ScrollToTop />
     </div>
   );
 }

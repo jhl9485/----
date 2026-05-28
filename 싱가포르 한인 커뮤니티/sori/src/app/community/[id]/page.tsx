@@ -1,59 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import PageHeader from "@/components/shared/PageHeader";
 import CommentSection from "@/components/shared/CommentSection";
-import { COMMUNITY_POSTS, SAMPLE_COMMENTS, type VisaBadge } from "@/data/communityPosts";
-
-const VISA_BADGE_STYLE: Record<NonNullable<VisaBadge>, string> = {
-  "EP":    "bg-[#EBF0FB] text-[#2050A0]",
-  "S-Pass":"bg-[#EBF5F0] text-[#2B7A50]",
-  "DP":    "bg-[#FBF5E8] text-[#B07010]",
-  "PR":    "bg-[#F0EDE8] text-[#555]",
-  "시민권": "bg-[#181614] text-white",
-  "WH":   "bg-[#F5F0FF] text-[#7040C0]",
-};
-
-function renderContent(fullContent: string) {
-  return fullContent.split("\n").map((line, i) => {
-    if (line.startsWith("**") && line.endsWith("**") && line.length > 4) {
-      return <p key={i} className="font-bold text-[0.9rem] mt-5 mb-2 text-[#181614]">{line.replace(/\*\*/g, "")}</p>;
-    }
-    if (line.startsWith("- ")) {
-      return <li key={i} className="text-[0.85rem] text-[#181614] leading-relaxed ml-4 list-disc">{line.slice(2)}</li>;
-    }
-    if (line.startsWith("|") && line.endsWith("|")) {
-      if (line.includes("---")) return null;
-      const cells = line.split("|").filter((c) => c.trim());
-      const isHeader = fullContent.split("\n")[i + 1]?.includes("---");
-      return (
-        <div key={i} className={`flex gap-2 text-[0.82rem] py-1 border-b border-black/[0.05] ${isHeader ? "font-bold bg-[#F5F3EE] px-2 rounded-t" : "px-2"}`}>
-          {cells.map((c, j) => <span key={j} className="flex-1">{c.trim()}</span>)}
-        </div>
-      );
-    }
-    if (line.trim() === "") return <br key={i} />;
-    return <p key={i} className="text-[0.85rem] text-[#181614] leading-relaxed">{line}</p>;
-  });
-}
+import { COMMUNITY_POSTS, SAMPLE_COMMENTS } from "@/data/communityPosts";
+import { VISA_BADGE_STYLE } from "@/lib/visaBadge";
+import { renderMarkdown } from "@/lib/renderMarkdown";
+import { useToggleSet } from "@/lib/storage";
+import { useUserPosts } from "@/lib/userContent";
 
 export default function PostDetailPage({ params }: { params: { id: string } }) {
-  const post = COMMUNITY_POSTS.find((p) => p.id === params.id);
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const userPosts = useUserPosts();
+  const post = userPosts.find((p) => p.id === params.id) || COMMUNITY_POSTS.find((p) => p.id === params.id);
+  const { has: isLiked, toggle: toggleLike } = useToggleSet("sori_liked_posts");
+  const { has: isSaved, toggle: toggleSave } = useToggleSet("sori_saved_posts");
+  const { toggle: markRead } = useToggleSet("sori_read_posts");
+
+  useEffect(() => {
+    if (post) markRead(post.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post?.id]);
 
   if (!post) return notFound();
 
+  const liked = isLiked(post.id);
+  const saved = isSaved(post.id);
+  const allPosts = [...userPosts, ...COMMUNITY_POSTS];
   const comments = SAMPLE_COMMENTS[post.id] || [];
 
   // relatedIds 기반 연관글, 없으면 같은 카테고리에서 표시
-  const relatedPosts = post.relatedIds && post.relatedIds.length > 0
-    ? post.relatedIds.map((rid) => COMMUNITY_POSTS.find((p) => p.id === rid)).filter(Boolean)
-    : COMMUNITY_POSTS.filter((p) => p.categoryId === post.categoryId && p.id !== post.id).slice(0, 2);
+  const relatedPosts = (post.relatedIds && post.relatedIds.length > 0
+    ? post.relatedIds.map((rid) => allPosts.find((p) => p.id === rid))
+    : allPosts.filter((p) => p.categoryId === post.categoryId && p.id !== post.id).slice(0, 2)
+  ).filter((p): p is NonNullable<typeof p> => Boolean(p));
 
-  const likeCount = parseInt(post.likes.replace(",", "")) + (liked ? 1 : 0);
+  const likeCount = parseInt(post.likes.replace(/,/g, "")) + (liked ? 1 : 0);
+
+  // 이전/다음 글 (현재 글 인덱스 기준)
+  const currentIdx = allPosts.findIndex((p) => p.id === post.id);
+  const prevPost = currentIdx > 0 ? allPosts[currentIdx - 1] : null;
+  const nextPost = currentIdx >= 0 && currentIdx < allPosts.length - 1 ? allPosts[currentIdx + 1] : null;
 
   const handleShare = () => {
     if (navigator.share) {
@@ -70,7 +58,15 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
         right={
           <div className="flex gap-3 items-center">
             <button onClick={handleShare} className="text-[0.75rem] text-[#888070] hover:text-[#181614]">↗ 공유</button>
-            <button className="text-[0.75rem] text-[#888070] hover:text-[#D04020]">신고</button>
+            <button
+              onClick={() => {
+                const r = window.prompt("신고 사유를 적어주세요 (선택)");
+                if (r !== null) alert("신고가 접수되었습니다.");
+              }}
+              className="text-[0.75rem] text-[#888070] hover:text-[#D04020]"
+            >
+              신고
+            </button>
           </div>
         }
       />
@@ -118,26 +114,27 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
 
         {/* 본문 */}
         <div className="px-4 md:px-6 py-5 space-y-[2px]">
-          {renderContent(post.fullContent)}
+          {renderMarkdown(post.fullContent)}
         </div>
 
         {/* 태그 */}
         <div className="px-4 md:px-6 pb-4 flex flex-wrap gap-2">
           {post.tags.map((tag) => (
-            <span
+            <Link
               key={tag}
-              className="text-[0.72rem] bg-[#F5F3EE] border border-black/[0.08] rounded-full px-3 py-[4px] text-[#888070] hover:border-[#D04020] hover:text-[#D04020] cursor-pointer transition-colors"
+              href={`/community/tag/${encodeURIComponent(tag)}`}
+              className="text-[0.72rem] bg-[#F5F3EE] border border-black/[0.08] rounded-full px-3 py-[4px] text-[#888070] hover:border-[#D04020] hover:text-[#D04020] transition-colors"
               style={{ fontFamily: "'IBM Plex Mono', monospace" }}
             >
               #{tag}
-            </span>
+            </Link>
           ))}
         </div>
 
         {/* 액션 바 */}
         <div className="px-4 md:px-6 py-3 border-t border-black/[0.06] flex items-center gap-4">
           <button
-            onClick={() => setLiked(!liked)}
+            onClick={() => toggleLike(post.id)}
             className={`flex items-center gap-[5px] text-[0.82rem] font-medium transition-colors ${liked ? "text-[#D04020]" : "text-[#888070] hover:text-[#D04020]"}`}
           >
             {liked ? "❤️" : "🤍"} <span>{likeCount.toLocaleString()}</span>
@@ -146,7 +143,7 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
             💬 <span>{post.comments}</span>
           </button>
           <button
-            onClick={() => setSaved(!saved)}
+            onClick={() => toggleSave(post.id)}
             className={`flex items-center gap-[5px] text-[0.82rem] ml-auto transition-colors ${saved ? "text-[#2050A0]" : "text-[#888070] hover:text-[#2050A0]"}`}
           >
             {saved ? "🔖 저장됨" : "🏷️ 저장"}
@@ -160,14 +157,32 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
         </div>
       </article>
 
+      {/* 이전/다음 글 네비게이션 */}
+      {(prevPost || nextPost) && (
+        <div className="bg-white mt-2 grid grid-cols-2 divide-x divide-black/[0.06]">
+          {prevPost ? (
+            <Link href={`/community/${prevPost.id}`} className="px-4 md:px-6 py-4 hover:bg-[#F5F3EE] transition-colors">
+              <div className="text-[0.68rem] text-[#888070] mb-1">← 이전 글</div>
+              <div className="text-[0.78rem] font-medium line-clamp-1">{prevPost.title}</div>
+            </Link>
+          ) : <div className="px-4 md:px-6 py-4 text-[0.7rem] text-[#C0BBB0]">처음 글이에요</div>}
+          {nextPost ? (
+            <Link href={`/community/${nextPost.id}`} className="px-4 md:px-6 py-4 hover:bg-[#F5F3EE] transition-colors text-right">
+              <div className="text-[0.68rem] text-[#888070] mb-1">다음 글 →</div>
+              <div className="text-[0.78rem] font-medium line-clamp-1">{nextPost.title}</div>
+            </Link>
+          ) : <div className="px-4 md:px-6 py-4 text-[0.7rem] text-[#C0BBB0] text-right">마지막 글이에요</div>}
+        </div>
+      )}
+
       {/* 댓글 */}
-      <CommentSection comments={comments} />
+      <CommentSection comments={comments} postId={post.id} />
 
       {/* 연관 게시글 */}
       {relatedPosts.length > 0 && (
         <div className="bg-white mt-2 px-4 md:px-6 py-4">
           <h3 className="text-[0.85rem] font-bold mb-3 text-[#888070]">연관 게시글</h3>
-          {relatedPosts.map((related) => related && (
+          {relatedPosts.map((related) => (
             <Link key={related.id} href={`/community/${related.id}`} className="block py-[10px] border-b border-black/[0.04] last:border-0 group">
               <div className="flex items-center gap-2 mb-[2px]">
                 <span className={`text-[0.62rem] px-[6px] py-[1px] rounded-full font-semibold ${related.categoryStyle}`}>

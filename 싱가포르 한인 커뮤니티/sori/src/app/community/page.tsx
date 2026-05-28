@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import FavoritesSection from "@/components/community/FavoritesSection";
 import CategoryTabs from "@/components/community/CategoryTabs";
 import CommunityPostCard from "@/components/community/CommunityPostCard";
 import { COMMUNITY_POSTS } from "@/data/communityPosts";
+import { useUserPosts } from "@/lib/userContent";
 
 const FEED_TABS = ["최신순", "인기순", "댓글순"] as const;
 type FeedTab = typeof FEED_TABS[number];
@@ -15,29 +16,61 @@ const NOTICES = [
   { id: "n1", emoji: "⚠️", text: "P1 국제학생 신청 마감 D-4 (5월 25일)", link: "/news/1" },
 ];
 
+// 인기 태그 (등장 빈도 상위 8개)
+const TOP_TAGS = (() => {
+  const counts: Record<string, number> = {};
+  for (const p of COMMUNITY_POSTS) {
+    for (const t of p.tags) counts[t] = (counts[t] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8)
+    .map(([t]) => t);
+})();
+
 export default function CommunityPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [feedTab, setFeedTab] = useState<FeedTab>("최신순");
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const userPosts = useUserPosts();
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchQuery), 150);
+    return () => clearTimeout(t);
+  }, [searchQuery]);
+
+  // 사용자 글 + 정적 글 합치기 (사용자 글이 최상단)
+  const allPosts = useMemo(() => [...userPosts, ...COMMUNITY_POSTS], [userPosts]);
+
+  const categoryCounts = useMemo(() => {
+    return allPosts.reduce<Record<string, number>>((acc, p) => {
+      acc[p.categoryId] = (acc[p.categoryId] || 0) + 1;
+      return acc;
+    }, {});
+  }, [allPosts]);
 
   const base = selectedCategory === "all"
-    ? COMMUNITY_POSTS
-    : COMMUNITY_POSTS.filter((p) => p.categoryId === selectedCategory);
+    ? allPosts
+    : allPosts.filter((p) => p.categoryId === selectedCategory);
 
-  const searched = searchQuery
-    ? base.filter((p) =>
-        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.preview.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()))
-      )
-    : base;
+  const q = debouncedSearch.toLowerCase().trim();
+  const searched = useMemo(() => (
+    q
+      ? base.filter((p) =>
+          p.title.toLowerCase().includes(q) ||
+          p.preview.toLowerCase().includes(q) ||
+          p.tags.some((t) => t.toLowerCase().includes(q))
+        )
+      : base
+  ), [q, base]);
 
   const sorted = [...searched].sort((a, b) => {
     if (feedTab === "인기순") {
-      return parseInt(b.likes.replace(",", "")) - parseInt(a.likes.replace(",", ""));
+      return parseInt(b.likes.replace(/,/g, "")) - parseInt(a.likes.replace(/,/g, ""));
     }
     if (feedTab === "댓글순") {
-      return parseInt(b.comments.replace(",", "")) - parseInt(a.comments.replace(",", ""));
+      return parseInt(b.comments.replace(/,/g, "")) - parseInt(a.comments.replace(/,/g, ""));
     }
     return 0; // 최신순 = 데이터 순서 유지
   });
@@ -50,7 +83,7 @@ export default function CommunityPage() {
           <div>
             <h1 className="text-[1.2rem] md:text-[1.4rem] font-bold tracking-tight">커뮤니티</h1>
             <p className="text-[0.75rem] text-[#888070] mt-[2px]">
-              싱가포르 한인 자유 게시판 · <span className="font-medium text-[#181614]">{COMMUNITY_POSTS.length}개</span> 게시글
+              싱가포르 한인 자유 게시판 · <span className="font-medium text-[#181614]">{allPosts.length}개</span> 게시글
             </p>
           </div>
           <Link
@@ -77,7 +110,7 @@ export default function CommunityPage() {
 
       {/* 검색 */}
       <div className="px-4 md:px-6 pb-3 relative">
-        <span className="absolute left-7 md:left-9 top-1/2 -translate-y-1/2 text-[0.9rem] text-[#888070] pointer-events-none">🔍</span>
+        <span className="absolute left-7 md:left-9 inset-y-0 flex items-center text-[0.9rem] text-[#888070] pointer-events-none leading-none">🔍</span>
         <input
           type="text"
           value={searchQuery}
@@ -104,8 +137,34 @@ export default function CommunityPage() {
 
       {/* 전체 카테고리 탭 */}
       <div className="px-4 md:px-6">
-        <CategoryTabs selected={selectedCategory} onSelect={setSelectedCategory} />
+        <CategoryTabs
+          selected={selectedCategory}
+          onSelect={setSelectedCategory}
+          counts={categoryCounts}
+          totalCount={allPosts.length}
+        />
       </div>
+
+      {/* 인기 태그 */}
+      {TOP_TAGS.length > 0 && (
+        <div className="px-4 md:px-6 pb-3">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[0.7rem] font-bold text-[#888070]">🏷️ 인기 태그</span>
+          </div>
+          <div className="flex flex-wrap gap-[5px]">
+            {TOP_TAGS.map((tag) => (
+              <Link
+                key={tag}
+                href={`/community/tag/${encodeURIComponent(tag)}`}
+                className="text-[0.7rem] rounded-full px-[10px] py-[3px] border bg-white text-[#888070] border-black/[0.08] hover:border-[#D04020] hover:text-[#D04020] transition-colors"
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+              >
+                #{tag}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 피드 정렬 탭 */}
       <div className="px-4 md:px-6 mb-3 flex items-center justify-between">
@@ -148,7 +207,7 @@ export default function CommunityPage() {
       {/* 글쓰기 플로팅 버튼 */}
       <Link
         href="/write"
-        className="fixed bottom-[76px] md:bottom-8 right-4 md:right-8 xl:right-[312px] w-12 h-12 bg-[#D04020] text-white rounded-full shadow-[0_4px_16px_rgba(208,64,32,0.35)] flex items-center justify-center text-xl z-40 hover:bg-[#B83515] hover:scale-105 transition-all"
+        className="fixed bottom-[76px] md:bottom-8 right-4 md:right-8 xl:right-[312px] w-12 h-12 bg-[#D04020] text-white rounded-full shadow-[0_4px_16px_rgba(208,64,32,0.35)] flex items-center justify-center text-xl leading-none z-40 hover:bg-[#B83515] hover:scale-105 transition-all"
       >
         ✏️
       </Link>

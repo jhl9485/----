@@ -1,47 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-
-interface FavItem {
-  id: string;
-  icon: string;
-  label: string;
-  href: string;
-  color: string;
-}
-
-const ALL_ITEMS: FavItem[] = [
-  { id: "business",  icon: "🏪", label: "한인업소록", href: "/business",  color: "bg-[#FBF0EC]" },
-  { id: "jobs",      icon: "💼", label: "구인구직",   href: "/jobs",      color: "bg-[#EBF5F0]" },
-  { id: "news",      icon: "📰", label: "뉴스",       href: "/news",      color: "bg-[#EBF0FB]" },
-  { id: "flea",      icon: "🛍️", label: "벼룩시장",  href: "/flea",      color: "bg-[#FBF5E8]" },
-  { id: "community", icon: "💬", label: "커뮤니티",   href: "/community", color: "bg-[#F0EDE8]" },
-  { id: "qna",       icon: "❓", label: "Q&A",        href: "/community", color: "bg-[#FBF0EC]" },
-  { id: "visa",      icon: "📋", label: "비자정보",   href: "/community", color: "bg-[#EBF0FB]" },
-  { id: "realty",    icon: "🏠", label: "부동산",     href: "/community", color: "bg-[#FBF5E8]" },
-  { id: "food",      icon: "🍱", label: "맛집",       href: "/business",  color: "bg-[#FBF0EC]" },
-  { id: "anon",      icon: "🎭", label: "익명",       href: "/community", color: "bg-[#F0EDE8]" },
-  { id: "event",     icon: "📅", label: "이벤트",     href: "/community", color: "bg-[#FBF5E8]" },
-  { id: "my",        icon: "🤍", label: "MY",         href: "/my",        color: "bg-[#F5F0FF]" },
-];
-
-const DEFAULT_FAV_IDS = ["business", "jobs", "news", "flea", "community", "qna", "visa", "my"];
-const STORAGE_KEY = "sori_home_favorites";
+import { ALL_FAV_ITEMS, useFavorites } from "@/lib/favorites";
 
 export default function HomeFavorites() {
-  const [favIds, setFavIds] = useState<string[]>(DEFAULT_FAV_IDS);
+  const { favIds, favItems, save } = useFavorites();
   const [editing, setEditing] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) setFavIds(JSON.parse(saved));
-  }, []);
-
-  const save = (ids: string[]) => {
-    setFavIds(ids);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
-  };
 
   const toggle = (id: string) => {
     if (favIds.includes(id)) {
@@ -52,8 +17,6 @@ export default function HomeFavorites() {
       save([...favIds, id]);
     }
   };
-
-  const favItems = ALL_ITEMS.filter((item) => favIds.includes(item.id));
 
   if (editing) {
     return (
@@ -73,7 +36,7 @@ export default function HomeFavorites() {
           </button>
         </div>
         <div className="grid grid-cols-4 gap-2">
-          {ALL_ITEMS.map((item) => {
+          {ALL_FAV_ITEMS.map((item) => {
             const selected = favIds.includes(item.id);
             const maxed = favIds.length >= 8 && !selected;
             return (
