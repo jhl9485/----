@@ -1131,6 +1131,11 @@
           <div class="card-title">뉴스 댓글 기능</div>
           <div class="card-desc">뉴스 상세에 CommentSection 추가 (postId=news-{id}). 커뮤니티와 동일하게 localStorage 영속 + 익명 토글 + 답글.</div>
         </div>
+        <div class="card accent-green">
+          <div class="card-icon">🚫</div>
+          <div class="card-title">광고 전체 제거 (사용자 요청)</div>
+          <div class="card-desc">초기 사용자 경험 우선 — BannerAd × 2, SponsoredBizCard, SponsoredJobCard, RightPanelAd, NativeFeedAd 모두 제거. import 정리 + 시야 깔끔. 향후 사용자 100명+ 시 점진 재도입 고려.</div>
+        </div>
       </div>
 
       <h4 style="font-size: 0.95rem; font-weight: 700; margin: 1.5rem 0 0.6rem;">✨ 추가 개선 10건</h4>
@@ -1140,7 +1145,7 @@
           <tr><td>1</td><td>뉴스 카테고리 필터 버그</td><td>실제 데이터 기반 동적 생성 (클릭 시 빈 결과 해결)</td></tr>
           <tr><td>2</td><td>검색 무결과 추천</td><td>결과 없을 때 인기 검색어 칩 노출</td></tr>
           <tr><td>3</td><td>글쓰기 글자수 제한</td><td>본문 maxLength 2000 적용</td></tr>
-          <tr><td>4</td><td>광고 배너 닫기</td><td>X 버튼 터치영역 확대 (8×8)</td></tr>
+          <tr><td>4</td><td>뉴스 상세 좋아요</td><td>저장(🔖)과 별도로 좋아요(❤️) 추가, sori_liked_news 영속</td></tr>
           <tr><td>5</td><td>이미지 lazy loading</td><td>목록 카드 썸네일 loading="lazy"</td></tr>
           <tr><td>6</td><td>커스텀 404 페이지</td><td>홈·커뮤니티·검색 바로가기 포함</td></tr>
           <tr><td>7</td><td>뉴스 NEW 배지</td><td>3일 이내 기사 자동 NEW 표시</td></tr>
