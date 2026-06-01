@@ -7,7 +7,15 @@
       "Bash(netstat -ano)",
       "Bash(findstr \":300\")",
       "Bash(tasklist /FI \"PID eq 2328\" /FI \"PID eq 15188\")",
-      "WebSearch"
+      "WebSearch",
+      "Read(//c/Users/Jinho Lee/.claude/**)",
+      "Bash(npx tsc *)",
+      "Bash(cd \"/c/이진호/앱 개발/싱가포르 한인 커뮤니티/sori\" && grep -n \"isUrgent\" src/data/realtyItems.ts | head -10)",
+      "Read(//c/c/이진호/앱 개발/싱가포르 한인 커뮤니티/sori/src/data/**)",
+      "Bash(python -c ' *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\Jinho Lee\\.claude"
     ]
   }
 }

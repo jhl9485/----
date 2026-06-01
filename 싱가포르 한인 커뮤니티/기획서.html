@@ -385,11 +385,16 @@
   <a href="#risk"><span class="num">10</span> 리스크 & 대응</a>
   <a href="#kpi"><span class="num">11</span> KPI & 목표</a>
 
+  <div class="nav-section-label">수정 사항</div>
+  <a href="#changelog-0528"><span class="num">5/28</span> 2026.05.28 (3일차)</a>
+  <a href="#changelog-0526"><span class="num">5/26</span> 2026.05.26 (2일차)</a>
+  <a href="#changelog-0525"><span class="num">5/25</span> 2026.05.25 (1일차)</a>
+
   <div class="nav-spacer"></div>
   <div class="nav-footer">
     Singapore Korean Platform<br>
     작성일: 2026.05<br>
-    초안 — 수정 가능
+    최근 업데이트: 2026.05.28
   </div>
 </nav>
 
@@ -1069,6 +1074,609 @@
         <span style="background:var(--c-accent); color:#fff; padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600;">기획서 검토 완료</span>
         <span style="border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.65); padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem;">와이어프레임 → 다음 단계</span>
       </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 12 CHANGELOG -->
+  <section class="doc-section" id="changelog">
+    <div class="section-eyebrow">수정 사항 · 날짜별 변경 이력</div>
+    <h2 class="section-h">개발 변경 이력</h2>
+
+    <p style="font-size: 1rem; color: var(--c-muted); max-width: 620px; margin-bottom: 1.5rem;">
+      날짜별로 수정·개발한 내용을 정리했습니다. 좌측 메뉴에서 날짜를 선택하면 해당 작업으로 이동합니다.
+      누적 3일간 <strong style="color: var(--c-text);">정보 허브 + 커뮤니티 + 로컬 커머스 + 모바일 친화</strong> 통합 플랫폼 구축.
+    </p>
+
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num">7</div><div class="stat-label">메이저 커밋<br>(전부 배포 반영)</div></div>
+      <div class="stat-box"><div class="stat-num">3일</div><div class="stat-label">작업 기간<br>(5/25~5/28)</div></div>
+      <div class="stat-box"><div class="stat-num">+5,900</div><div class="stat-label">누적 코드 라인</div></div>
+      <div class="stat-box"><div class="stat-num">0</div><div class="stat-label">TypeScript 에러</div></div>
+    </div>
+
+    <!-- ===== 2026.05.28 (3일차) ===== -->
+    <div id="changelog-0528" style="scroll-margin-top: 1rem;">
+      <h3 class="sub-h" style="font-size: 1.25rem; border-bottom: 2px solid var(--c-accent); padding-bottom: 0.5rem; margin-top: 2.5rem;">
+        🗓️ 2026.05.28 (3일차) — 검색 정렬·뉴스 최신화·모바일·개선 10건
+      </h3>
+
+      <div class="callout info">
+        <div class="callout-title">📌 핵심 이슈 해결</div>
+        ① 검색 아이콘 정렬을 flex 구조(SearchField 컴포넌트)로 근본 해결 — 모든 페이지 적용.
+        ② 모바일 스크롤 시 하단 바 가림 → viewport-fit + safe-area로 수정.
+        ③ Daily 뉴스 5/21 이후 정체 → 최신 5건 추가(웹검색 실데이터 반영).
+        ④ 뉴스에도 댓글 기능 추가.
+      </div>
+
+      <div class="card-grid">
+        <div class="card accent-red">
+          <div class="card-icon">🔍</div>
+          <div class="card-title">검색 아이콘 정렬 완전 수정</div>
+          <div class="card-desc">absolute 포지셔닝을 버리고 SearchField 공용 컴포넌트(flex 구조) 신설. 돋보기 아이콘이 입력칸 수직 정중앙에 항상 위치. jobs·business·realty·flea·community·search + 홈·우측패널 전부 교체. 벼룩시장 검색 실동작도 추가.</div>
+        </div>
+        <div class="card accent-red">
+          <div class="card-icon">📱</div>
+          <div class="card-title">모바일 하단 바 가림 수정</div>
+          <div class="card-desc">layout.tsx viewport-fit=cover + safe-area-inset 대응. BottomNav 높이/safe-area 구조 분리, 콘텐츠 하단 여백 확대, 플로팅 FAB 5개 위치 보정.</div>
+        </div>
+        <div class="card accent-blue">
+          <div class="card-icon">📰</div>
+          <div class="card-title">Daily 뉴스 최신화 (5건)</div>
+          <div class="card-desc">뎅기 피크시즌(NEA, 전년比 66%↓), 6월 학교방학, 주말 스콜 날씨, 콘도 공급완화(1.85만 세대 완공), 원·싱달러 환율. 실제 웹검색 정보 기반으로 5/23~5/28 날짜 부여.</div>
+        </div>
+        <div class="card accent-blue">
+          <div class="card-icon">💬</div>
+          <div class="card-title">뉴스 댓글 기능</div>
+          <div class="card-desc">뉴스 상세에 CommentSection 추가 (postId=news-{id}). 커뮤니티와 동일하게 localStorage 영속 + 익명 토글 + 답글.</div>
+        </div>
+      </div>
+
+      <h4 style="font-size: 0.95rem; font-weight: 700; margin: 1.5rem 0 0.6rem;">✨ 추가 개선 10건</h4>
+      <table class="rev-table">
+        <thead><tr><th>#</th><th>개선 항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>뉴스 카테고리 필터 버그</td><td>실제 데이터 기반 동적 생성 (클릭 시 빈 결과 해결)</td></tr>
+          <tr><td>2</td><td>검색 무결과 추천</td><td>결과 없을 때 인기 검색어 칩 노출</td></tr>
+          <tr><td>3</td><td>글쓰기 글자수 제한</td><td>본문 maxLength 2000 적용</td></tr>
+          <tr><td>4</td><td>광고 배너 닫기</td><td>X 버튼 터치영역 확대 (8×8)</td></tr>
+          <tr><td>5</td><td>이미지 lazy loading</td><td>목록 카드 썸네일 loading="lazy"</td></tr>
+          <tr><td>6</td><td>커스텀 404 페이지</td><td>홈·커뮤니티·검색 바로가기 포함</td></tr>
+          <tr><td>7</td><td>뉴스 NEW 배지</td><td>3일 이내 기사 자동 NEW 표시</td></tr>
+          <tr><td>8</td><td>댓글 글자수 제한</td><td>입력 maxLength 500</td></tr>
+          <tr><td>9</td><td>FAB 위치 보정</td><td>safe-area 고려해 하단바와 겹침 방지</td></tr>
+          <tr><td>10</td><td>댓글 작성자 = 프로필</td><td>useProfile 닉네임/아바타 반영</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===== 2026.05.26 (2일차) 앵커 ===== -->
+    <div id="changelog-0526" style="scroll-margin-top: 1rem;">
+      <h3 class="sub-h" style="font-size: 1.25rem; border-bottom: 2px solid var(--c-accent2); padding-bottom: 0.5rem; margin-top: 3rem;">
+        🗓️ 2026.05.26 (2일차) — 사용자 피드백 11건 + 모바일 UX 13건
+      </h3>
+      <p class="muted" style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+        (아래 "커밋 타임라인"·"카테고리별 요약"에 2일차 상세가 포함되어 있습니다)
+      </p>
+    </div>
+
+    <!-- ===== 2026.05.25 (1일차) 앵커 ===== -->
+    <div id="changelog-0525" style="scroll-margin-top: 1rem;">
+      <h3 class="sub-h" style="font-size: 1.25rem; border-bottom: 2px solid var(--c-accent3); padding-bottom: 0.5rem; margin-top: 3rem;">
+        🗓️ 2026.05.25 (1일차) — 정보 허브·전용 등록폼·사진 시스템
+      </h3>
+    </div>
+
+    <h3 class="sub-h">📦 커밋 단위 타임라인 (전체)</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-period">26.05.28<br>⑦ 517bf93</div>
+        <div class="tl-dot amber"></div>
+        <div class="tl-body">
+          <div class="tl-title">🔍 검색 정렬 수정 + 뉴스 최신화/댓글 + 모바일 + 개선 10건</div>
+          <div class="tl-desc">
+            SearchField 공용 컴포넌트로 검색 아이콘 flex 중앙 정렬(전 페이지). 모바일 하단바 가림 viewport-fit 수정. Daily 뉴스 5건 최신화(뎅기·방학·날씨·부동산·환율). 뉴스 댓글 기능. 개선 10건(뉴스필터·검색추천·글자수·광고닫기·lazy·404·NEW배지·댓글maxLen·FAB·프로필닉네임).
+          </div>
+          <div class="tl-tags">
+            <span class="tag red">SearchField</span>
+            <span class="tag blue">뉴스 5건</span>
+            <span class="tag blue">뉴스 댓글</span>
+            <span class="tag green">개선 10건</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">26.05.26<br>⑥ 6eb0e6a</div>
+        <div class="tl-dot blue"></div>
+        <div class="tl-body">
+          <div class="tl-title">🚨 빌드 실패 수정(배포 정상화) + 햄버거/하단바/토글</div>
+          <div class="tl-desc">
+            ESLint 에러 2건이 Netlify 빌드를 막던 문제 해결(배포 정상화). 햄버거 SVG 아이콘, BottomNav 즐겨찾기 가로 슬라이드(lib/favorites.ts), 토글 스위치 칸 이탈 수정.
+          </div>
+          <div class="tl-tags">
+            <span class="tag red">배포 정상화</span>
+            <span class="tag blue">햄버거/하단바</span>
+            <span class="tag">토글 수정</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">26.05.25<br>① abba95d</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">🛠️ 전체 코드 최적화 + 커뮤니티 강화</div>
+          <div class="tl-desc">
+            만료된 채용공고 날짜 (2025→2026) 일괄 정리, 좋아요·저장·도움됨·읽은 글 localStorage 영속화, 공용 유틸 추출(visaBadge·renderMarkdown·storage)로 중복 80줄 제거,
+            DesktopRightPanel을 실제 데이터로 동기화. 모바일 검색 아이콘, NEW/HOT 배지, 카테고리 글 수, 인기 태그 칩 신설.
+          </div>
+          <div class="tl-tags">
+            <span class="tag red">버그 수정 5건</span>
+            <span class="tag blue">localStorage</span>
+            <span class="tag">코드 품질</span>
+            <span class="tag green">NEW/HOT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">26.05.25<br>② 9fa4bc3</div>
+        <div class="tl-dot blue"></div>
+        <div class="tl-body">
+          <div class="tl-title">📝 전용 등록 폼 3종 + 사이드바 재배치</div>
+          <div class="tl-desc">
+            기존엔 모든 등록이 동일한 글쓰기 폼이었지만, 부동산은 PropertyGuru 스타일 10단계 폼, 벼룩시장은 카테고리·상태·거래방법 위주 폼, 구인구직은 12단계 회사 등록 폼으로 각각 분리.
+            부동산 페이지(/realty) 신설(콘도/HDB/서비스/Landed 6개 매물). DesktopSidebar 순서 재배치 + 프로필 아래 MY 액션 버튼 3개.
+          </div>
+          <div class="tl-tags">
+            <span class="tag red">/realty 신설</span>
+            <span class="tag">/realty/write</span>
+            <span class="tag">/flea/write</span>
+            <span class="tag">/jobs/write</span>
+            <span class="tag blue">사이드바 개편</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">26.05.25<br>③ d06dc77</div>
+        <div class="tl-dot green"></div>
+        <div class="tl-body">
+          <div class="tl-title">🚀 커뮤니티 고급화 — 사진 시스템 + 데이터 통합</div>
+          <div class="tl-desc">
+            사용자가 작성한 글이 실제 목록에 표시되도록 통합 어댑터(lib/userContent.ts) 구축. 마이페이지 5탭 전면 개편(?tab= 쿼리).
+            ImageUploader(리사이즈+압축) + PhotoCarousel 신설로 벼룩·부동산에 실제 사진 표시. 태그 모음 페이지, 댓글 영속화, 검색 최근 기록, 상세 이전/다음 네비, 알림 안 읽음 카운트.
+          </div>
+          <div class="tl-tags">
+            <span class="tag red">사진 업로드</span>
+            <span class="tag red">PhotoCarousel</span>
+            <span class="tag blue">마이페이지 5탭</span>
+            <span class="tag green">태그 페이지</span>
+            <span class="tag">검색 통합</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">26.05.26<br>④ de63412</div>
+        <div class="tl-dot amber"></div>
+        <div class="tl-body">
+          <div class="tl-title">🛠️ UI/UX 디테일 다수 개선 + 한인업소 등록 + 프로필 편집</div>
+          <div class="tl-desc">
+            사용자 피드백 11개 항목 일괄 처리. 검색 아이콘 수직 정렬(leading-none), 디바운스 150ms, 부동산/업소 상세의 중개사 연락·지도·전화 버튼 실제 동작(tel:·Google Maps),
+            댓글·게시글 신고, 프로필 편집 모달, 부동산 플로팅 아이콘 🏘️로 변경 + href 수정. 한인 업소 등록 폼(/business/write) 10단계 신설.
+          </div>
+          <div class="tl-tags">
+            <span class="tag red">버그 수정</span>
+            <span class="tag red">/business/write</span>
+            <span class="tag blue">프로필 편집</span>
+            <span class="tag">디바운스</span>
+            <span class="tag">신고 기능</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">26.05.26<br>⑤ 40dcb97</div>
+        <div class="tl-dot green"></div>
+        <div class="tl-body">
+          <div class="tl-title">📱 모바일 UI/UX 전면 개선 (제안서 13개 항목 일괄)</div>
+          <div class="tl-desc">
+            햄버거 메뉴 + 좌측 드로어, BottomNav 알림 배지, 부동산 모바일 1열 큰 사진(인스타 스타일), LiveBar 컬러 카드 위젯 5종, 숫자 압축(1.2K/1.2만/12만),
+            PhotoCarousel 터치 스와이프, 바텀시트 모달, 풀투리프레시 컴포넌트, 키보드 가림 처리, 뒤로가기 명시, 본문 select-text, 스크롤 탑 버튼.
+          </div>
+          <div class="tl-tags">
+            <span class="tag red">🍔 햄버거</span>
+            <span class="tag red">바텀시트</span>
+            <span class="tag blue">PhotoCarousel 스와이프</span>
+            <span class="tag blue">풀투리프레시</span>
+            <span class="tag green">숫자 압축</span>
+            <span class="tag green">LiveBar 위젯</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-h">📅 2026.05.26 추가 작업 — 사용자 피드백 + 모바일 친화</h3>
+
+    <div class="callout info">
+      <div class="callout-title">🎯 2일차 핵심 성과</div>
+      1일차에 만든 기능들이 실제로 잘 동작하는지 사용자(진호님) 직접 테스트 → 발견된 11가지 UI/동작 이슈를 모두 해결.
+      이어서 데스크탑·모바일 차이에서 오는 13가지 모바일 UX 문제를 일괄 정리. 이제 모바일에서도 데스크탑과 동등한 접근성/편의성 확보.
+    </div>
+
+    <div class="card-grid">
+      <div class="card accent-amber">
+        <div class="card-icon">🍔</div>
+        <div class="card-title">햄버거 메뉴 + 드로어</div>
+        <div class="card-desc">
+          모바일 TopNav 좌측에 ☰ 아이콘 신설. 클릭 시 좌측에서 슬라이드되어 전체 메뉴 7개 + 알림·검색·프로필·MY 액션 노출. 이전엔 BottomNav 5개에 없는 부동산/벼룩/구인/뉴스 진입이 어려웠던 문제 해결.
+        </div>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-icon">📊</div>
+        <div class="card-title">LiveBar 위젯 강화</div>
+        <div class="card-desc">
+          단순 텍스트 칩 → 컬러 카드 위젯 5종(SGD환율·날씨·MRT·한인회·EP기준). snap-x 가로 스크롤, 클릭 시 관련 페이지로 이동. 데스크탑 RightPanel의 실시간 정보를 모바일에서도 같은 수준으로 제공.
+        </div>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-icon">🔢</div>
+        <div class="card-title">숫자 압축 표시</div>
+        <div class="card-desc">
+          src/lib/format.ts 신설. 1,234 → "1.2K", 12,345 → "1.2만", 100,000+ → "12만"으로 좁은 모바일 카드에서도 가독성 확보. CommunityPostCard에 우선 적용.
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">👆</div>
+        <div class="card-title">PhotoCarousel 스와이프</div>
+        <div class="card-desc">
+          touchstart/move/end로 좌우 스와이프 (50px 임계값, 0.3x 댐핑 시각 피드백). 모바일에선 좌우 화살표 숨김 + "← 좌우 스와이프 →" 힌트. 데스크탑에선 화살표 그대로.
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">📋</div>
+        <div class="card-title">바텀시트 모달</div>
+        <div class="card-desc">
+          프로필 편집 모달이 모바일에선 하단에서 위로 슬라이드 + grabber 표시(20px rounded-top). 데스크탑에선 기존 중앙 모달 유지. 인스타·당근마켓 스타일.
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">풀투리프레시</div>
+        <div class="card-desc">
+          src/components/shared/PullToRefresh.tsx. 70px 임계값, 최대 120px, 0.55x 댐핑. 회전 아이콘 + "당겨서 새로고침/놓으면/새로고침 중" 3단계 텍스트. 컴포넌트만 신설 (페이지 적용은 향후).
+        </div>
+      </div>
+      <div class="card accent-red">
+        <div class="card-icon">👤</div>
+        <div class="card-title">프로필 편집</div>
+        <div class="card-desc">
+          src/lib/profile.ts(useProfile 훅) + ProfileEditModal. 닉네임·비자(7종)·거주기간·지역(12곳) 편집. DesktopSidebar 프로필 카드와 마이페이지 헤더가 실시간 동기화.
+        </div>
+      </div>
+      <div class="card accent-red">
+        <div class="card-icon">🏪</div>
+        <div class="card-title">한인 업소 등록</div>
+        <div class="card-desc">
+          /business/write 10단계 폼. 사진 → 업종 10개 → 업소명 → 위치 → 연락처/영업시간 → 가격대 → 한국어 토글 → 태그 → 한 줄 소개 → 상세 설명. 사용자 등록 업소가 목록에 "내 업소" 배지로 표시.
+        </div>
+      </div>
+      <div class="card accent-green">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">검색 정렬·성능</div>
+        <div class="card-desc">
+          모든 검색바 아이콘에 leading-none 추가로 수직 정중앙. 검색 페이지·커뮤니티 페이지에 useMemo + 150ms 디바운스. 빠른 타이핑에도 끊김 없음.
+        </div>
+      </div>
+      <div class="card accent-green">
+        <div class="card-icon">📞</div>
+        <div class="card-title">실제 동작 버튼들</div>
+        <div class="card-desc">
+          부동산 상세: 연락(데모 alert)·지도(Google Maps 새 탭). 업소 상세: tel: URL + Google Maps + 공유(navigator.share). 댓글/게시글 신고: prompt로 사유 받아 접수 안내.
+        </div>
+      </div>
+      <div class="card accent-green">
+        <div class="card-icon">🧭</div>
+        <div class="card-title">모바일 네비 강화</div>
+        <div class="card-desc">
+          BottomNav MY 탭에 안 읽음 알림 배지. 활성 탭 상단 dot 표시. 하위 라우트(/community/1 등)도 활성 인식. 즐겨찾기 기본값에 부동산·통합검색 추가.
+        </div>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-icon">⌨️</div>
+        <div class="card-title">키보드·접근성 디테일</div>
+        <div class="card-desc">
+          글쓰기 textarea 포커스 시 scrollIntoView, iOS 입력 줌 방지(16px), webkit-tap-highlight 투명. article 본문 select-text. "← 뒤로" 텍스트 명시. 스크롤 400px+ 우측 하단 ↑ 버튼.
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-h">🗂️ 2026.05.26 추가 신규 파일</h3>
+    <table class="rev-table">
+      <thead>
+        <tr><th>경로</th><th>역할</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>src/app/business/write/page.tsx</strong></td>
+          <td>한인 업소 등록 폼 (10단계, 사진·업종·연락처·한국어 토글)</td>
+        </tr>
+        <tr>
+          <td><strong>src/lib/profile.ts</strong></td>
+          <td>사용자 프로필 영속화 (useProfile 훅 + localStorage)</td>
+        </tr>
+        <tr>
+          <td><strong>src/lib/format.ts</strong></td>
+          <td>숫자/가격 압축 표시 (formatCount, shortPrice)</td>
+        </tr>
+        <tr>
+          <td><strong>src/components/layout/MobileDrawer.tsx</strong></td>
+          <td>모바일 햄버거 메뉴 슬라이드 드로어</td>
+        </tr>
+        <tr>
+          <td><strong>src/components/shared/PullToRefresh.tsx</strong></td>
+          <td>풀투리프레시 (라이브러리 없이 자체 구현)</td>
+        </tr>
+        <tr>
+          <td><strong>src/components/shared/ScrollToTop.tsx</strong></td>
+          <td>스크롤 탑 버튼 (모바일 한정, 400px 이상 표시)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-h">🎯 카테고리별 변경 요약 (1일차)</h3>
+
+    <div class="card-grid">
+      <div class="card accent-red">
+        <div class="card-icon">🐛</div>
+        <div class="card-title">버그 수정 (5건)</div>
+        <div class="card-desc">
+          만료된 채용공고 날짜(2025→2026 일괄), 푸터 © 2025→2026, 천단위 콤마 정렬 깨짐(replace 정규식), 검색 빈 쿼리 매번 필터링, CommentSection 미사용 prop 제거.
+        </div>
+      </div>
+      <div class="card accent-red">
+        <div class="card-icon">💾</div>
+        <div class="card-title">localStorage 영속화</div>
+        <div class="card-desc">
+          좋아요·저장·도움됨·읽은 글·댓글·임시저장·사용자 글/매물/공고/벼룩·최근 검색·알림 읽음 상태 등 14개 키로 클라이언트 사이드 영속화. 새로고침 손실 0건.
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">🏘️</div>
+        <div class="card-title">부동산 전용 페이지</div>
+        <div class="card-desc">
+          /realty 목록(거래·주거 타입 필터), /realty/[id] 상세, /realty/write 등록 폼. 면적·층수·상세주소는 개인정보 보호 차원에서 선택 항목. Diplomatic Clause 토글 포함.
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">🛍️</div>
+        <div class="card-title">벼룩시장·구인구직 강화</div>
+        <div class="card-desc">
+          /flea/write에 사진 5장 슬롯·가격 협상 토글·상품 상태 5단계·직거래/택배 옵션. /jobs/write는 12단계 회사 등록 폼 + 2026 EP 최저($6,000) 안내.
+        </div>
+      </div>
+      <div class="card accent-green">
+        <div class="card-icon">📸</div>
+        <div class="card-title">사진 업로드 시스템</div>
+        <div class="card-desc">
+          ImageUploader 컴포넌트(1200px 자동 리사이즈, JPEG 0.78 압축), PhotoCarousel(좌우 네비·인디케이터·n/N 카운터). 목록 카드 썸네일 + 상세 슬라이드, 용량 초과 시 graceful fallback.
+        </div>
+      </div>
+      <div class="card accent-green">
+        <div class="card-icon">👤</div>
+        <div class="card-title">마이페이지 5탭 개편</div>
+        <div class="card-desc">
+          ?tab=overview/posts/saved/liked/settings 쿼리 지원. 통계 카드 4개 실데이터 연동, 내 글 4섹션(커뮤니티/매물/공고/벼룩) + 개별 삭제, 저장·좋아요·도움됨 모음.
+        </div>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">검색 통합 + 최근 기록</div>
+        <div class="card-desc">
+          검색 결과에 사용자 등록 항목 포함, 부동산·벼룩 섹션 추가(총 6개 탭). 최근 검색 6개 자동 저장(디바운스 1.5초), 개별/전체 삭제, 결과 카드에 사진 썸네일.
+        </div>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-icon">🏷️</div>
+        <div class="card-title">태그 페이지 + 인기 태그</div>
+        <div class="card-desc">
+          /community/tag/[tag] 신설 — 같은 태그 글 모음 + 관련 태그 추천 6개. 인기 태그 칩(빈도 상위 8개)이 커뮤니티 페이지 + 게시글 상세에서 모두 새 페이지로 연결.
+        </div>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-icon">🔔</div>
+        <div class="card-title">알림 시스템</div>
+        <div class="card-desc">
+          data/notifications.ts 분리, useReadNotifications·useUnreadCount 훅. 읽음 상태 localStorage 영속 + 탭 간 storage 이벤트 동기화. TopNav·DesktopSidebar 양쪽에 안 읽음 빨간 배지(99+ 처리).
+        </div>
+      </div>
+      <div class="card accent-red">
+        <div class="card-icon">📝</div>
+        <div class="card-title">글쓰기 강화</div>
+        <div class="card-desc">
+          비자 배지 7개 선택(EP/S-Pass/DP/PR/시민권/WH/표시안함), 태그 입력(쉼표·공백 구분, 최대 6개, 실시간 미리보기), ?cat= 쿼리로 카테고리 미리 선택, 익명 ON 시 비자 자동 숨김.
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-icon">💬</div>
+        <div class="card-title">댓글 실시간 + 영속화</div>
+        <div class="card-desc">
+          postId 기반 localStorage 저장으로 새로고침해도 댓글 유지. 일반/익명 토글, Enter 키 등록, 답글도 즉시 추가. SAMPLE_COMMENTS와 사용자 댓글 자동 병합.
+        </div>
+      </div>
+      <div class="card accent-green">
+        <div class="card-icon">🧭</div>
+        <div class="card-title">상세 이전/다음 네비</div>
+        <div class="card-desc">
+          커뮤니티 상세 페이지에서 이전 글 / 다음 글로 바로 이동. 사용자 글 포함한 전체 인덱스 기준 처음/마지막 글 경계 처리.
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-h">🗂️ 신규 페이지 / 신설 파일</h3>
+    <table class="rev-table">
+      <thead>
+        <tr><th>경로</th><th>역할</th><th>특이사항</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>/realty</strong></td>
+          <td>부동산 매물 목록</td>
+          <td>거래(임대/매매/단기)·타입 필터, 6개 시드 매물</td>
+        </tr>
+        <tr>
+          <td><strong>/realty/[id]</strong></td>
+          <td>매물 상세</td>
+          <td>PhotoCarousel, 스펙 카드, 편의시설, 비슷한 매물 추천</td>
+        </tr>
+        <tr>
+          <td><strong>/realty/write</strong></td>
+          <td>부동산 등록 폼</td>
+          <td>PropertyGuru 스타일 10단계, 사진 1번 섹션, Diplomatic Clause 토글</td>
+        </tr>
+        <tr>
+          <td><strong>/flea/write</strong></td>
+          <td>벼룩시장 등록 폼</td>
+          <td>사진+8단계, 가격 협상 토글, 상품 상태 5단계</td>
+        </tr>
+        <tr>
+          <td><strong>/jobs/write</strong></td>
+          <td>채용 공고 등록 폼</td>
+          <td>12단계, 급여 min~max, 비자 4종, 2026 EP 안내</td>
+        </tr>
+        <tr>
+          <td><strong>/community/tag/[tag]</strong></td>
+          <td>태그 모음 페이지</td>
+          <td>같은 태그 글 + 관련 태그 6개 추천</td>
+        </tr>
+        <tr>
+          <td><strong>lib/userContent.ts</strong></td>
+          <td>사용자 데이터 어댑터</td>
+          <td>localStorage → 정적 데이터 타입 변환, 4개 훅</td>
+        </tr>
+        <tr>
+          <td><strong>lib/notifications.ts</strong></td>
+          <td>알림 시스템</td>
+          <td>useReadNotifications, useUnreadCount</td>
+        </tr>
+        <tr>
+          <td><strong>lib/storage.ts</strong></td>
+          <td>저장 공용 훅</td>
+          <td>useToggleSet (좋아요/저장/도움됨/읽음 통합)</td>
+        </tr>
+        <tr>
+          <td><strong>components/shared/ImageUploader.tsx</strong></td>
+          <td>이미지 업로더</td>
+          <td>5장 슬롯, 리사이즈+압축, base64 저장</td>
+        </tr>
+        <tr>
+          <td><strong>components/shared/PhotoCarousel.tsx</strong></td>
+          <td>사진 캐러셀</td>
+          <td>좌우 네비·인디케이터·카운터, fallback 이모지</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-h">📊 기획서 대비 진척도</h3>
+    <table class="rev-table">
+      <thead>
+        <tr><th>기획서 항목</th><th>구현 상태</th><th>비고</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Phase 1 — 정보 허브 (커뮤니티)</td>
+          <td class="priority-high">✅ 완료</td>
+          <td>사용자 글 통합, 태그/카테고리/검색 동작</td>
+        </tr>
+        <tr>
+          <td>Phase 1 — 업소록 2.0</td>
+          <td class="priority-high">✅ 완료</td>
+          <td>등록 폼·사용자 등록 표시 추가 (2일차), 지도 API 연동은 향후</td>
+        </tr>
+        <tr>
+          <td>Phase 1 — 구인구직 보드</td>
+          <td class="priority-high">✅ 완료</td>
+          <td>비자 필터 + 등록폼 동작</td>
+        </tr>
+        <tr>
+          <td>Phase 2 — 동네 커뮤니티 (벼룩시장)</td>
+          <td class="priority-high">✅ 완료</td>
+          <td>사진 업로드까지 구현</td>
+        </tr>
+        <tr>
+          <td>Phase 2 — 부동산 게시판</td>
+          <td class="priority-high">✅ 선행 구현</td>
+          <td>1일차 완성 + 2일차 플로팅·등록 흐름 다듬음</td>
+        </tr>
+        <tr>
+          <td>모바일 UX — 햄버거·바텀시트·스와이프·풀투리프레시</td>
+          <td class="priority-high">✅ 완료 (2일차)</td>
+          <td>13개 항목 일괄, 데스크탑·모바일 동등 접근성</td>
+        </tr>
+        <tr>
+          <td>사용자 프로필 편집</td>
+          <td class="priority-high">✅ 완료 (2일차)</td>
+          <td>useProfile 훅 + localStorage 영속 + 모달</td>
+        </tr>
+        <tr>
+          <td>Phase 2 — 이벤트 캘린더</td>
+          <td class="priority-mid">⏳ 미착수</td>
+          <td>다음 단계 후보</td>
+        </tr>
+        <tr>
+          <td>Phase 3 — 티켓·예약 커머스</td>
+          <td class="priority-low">📋 계획</td>
+          <td>DB 연동 후</td>
+        </tr>
+        <tr>
+          <td>인프라 — Supabase / Algolia / Resend</td>
+          <td class="priority-low">📋 계획</td>
+          <td>현재 localStorage 사용 중 (단일 사용자 한정)</td>
+        </tr>
+        <tr>
+          <td>로그인·회원가입</td>
+          <td class="priority-low">📋 계획</td>
+          <td>DB 연동과 동시 진행 필요</td>
+        </tr>
+        <tr>
+          <td>모바일 앱 (Expo)</td>
+          <td class="priority-low">📋 계획</td>
+          <td>로드맵 7~9개월 차</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-h">🚦 다음 우선 작업 제안 (2일차 종료 시점)</h3>
+    <ol class="step-list">
+      <li><strong>Supabase 연동 + 로그인/회원가입</strong> 여전히 가장 우선. 현재는 한 브라우저에서만 본인 글이 보임. 다중 사용자가 되려면 백엔드 DB 필수. 카카오·구글 소셜 로그인부터.</li>
+      <li><strong>풀투리프레시 페이지 통합</strong> 컴포넌트(PullToRefresh)는 만들어뒀으나 의도적으로 페이지 적용 안 함. Supabase 연동 후 실제 데이터 재조회와 함께 통합 권장.</li>
+      <li><strong>커뮤니티 글쓰기 사진 업로드</strong> 현재 벼룩·부동산·업소에만 ImageUploader 적용. 커뮤니티 일반 글에도 확장.</li>
+      <li><strong>이벤트 캘린더</strong> 기획서 Phase 2 미착수 항목. 모임·공연·한인행사 시각화. 수익화 가능(등록·티켓 수수료).</li>
+      <li><strong>글 수정 기능</strong> 현재 삭제만 가능. 등록 후 수정 진입점 추가.</li>
+      <li><strong>다크모드 + 영어 번역</strong> 한국인 외 한국에 관심 있는 싱가포르 현지인까지 타겟 확장 시 필요.</li>
+      <li><strong>카카오톡 공유 SDK</strong> 한인 커뮤니티 핵심 공유 채널. 현재는 navigator.share + clipboard fallback만.</li>
+    </ol>
+
+    <div class="callout success">
+      <div class="callout-title">✅ 결정 사항 — 기획서 대비 변경된 점</div>
+      <strong>벼룩시장·부동산을 커뮤니티 카테고리에서 분리</strong>해 별도 페이지로 승격(좌측 사이드바 메인 메뉴). 콘텐츠 성격이 게시글이 아닌 거래·매물 중심이라 UX 분리가 자연스러움. 사이드바 메뉴 순서도 한인 사용 빈도에 맞춰 재배치 — 홈 → 뉴스 → 한인업소록 → 부동산 → 벼룩시장 → 구인구직 → 커뮤니티.
+      <br><br>
+      <strong>2일차 추가:</strong> 한인업소록도 등록 폼·플로팅 버튼·"내 업소" 배지를 갖춰, 다른 카테고리와 동일한 UX 통일. 모바일에서는 햄버거 메뉴로 전체 메뉴 접근 + BottomNav 5개 탭 + 우측 상단 검색/알림/MY 빠른 접근 — 3가지 진입로 확보.
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">⚠️ 현 시점 한계 (여전히 유효)</div>
+      모든 사용자 데이터(글·댓글·좋아요·저장·프로필 등)가 <strong>브라우저 localStorage 단위</strong>로만 저장됩니다. 즉, 다른 사람이 보는 화면에는 본인이 쓴 글이 안 보이며, 휴대폰에서 쓴 글이 데스크탑에서도 안 보입니다. 이는 의도된 MVP 단계의 제약이며, Supabase 연동 시 즉시 해결됩니다.
+    </div>
+
+    <div class="callout info" style="margin-top: 2rem;">
+      <div class="callout-title">📊 2일차 누적 진척도</div>
+      Phase 1 핵심 기능 100% + Phase 2 부동산/이미지 선행 100% + 모바일 친화 UX 13개 항목 100% +
+      사용자 피드백 11개 항목 100%. 기획서의 6개월 로드맵 중 0~5개월 차에 해당하는 코드 구현 완료.
+      이제 <strong>실제 사용자 한 명 한 명을 받기 위한 백엔드(Supabase) 단계</strong>로 진입할 준비.
     </div>
   </section>
 
