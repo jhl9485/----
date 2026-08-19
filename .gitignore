@@ -1,0 +1,19 @@
+# SORI 앱은 별도 저장소에서 관리합니다 (github.com/jhl9485/sori-platform)
+싱가포르 한인 커뮤니티/sori/
+
+# 투자 프로젝트도 별도 저장소입니다 (github.com/jhl9485/tiger-invest)
+tiger-invest/
+
+# 개인 문서·자료 — 이 저장소는 공개(PUBLIC)이므로 올라가면 안 됩니다
+*.pdf
+*.csv
+*.jpeg
+*.jpg
+*.exe
+*.winmd
+인스타/
+조건값 주식 투자/
+주식 투자/
+
+# 작업용 임시 파일
+**/.claude/*.lock
